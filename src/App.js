@@ -1,25 +1,58 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect, useReducer } from 'react';
+import { planetsReducer } from './store/planetsReducer';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import PlanetCanvas from './components/canvas/PlanetCanvas';
+
+const App = () => {
+
+    const [planets, planetsDispatch] = useReducer(planetsReducer, []);
+    const [planetSelected, setPlanetSelected] = useState(null);
+
+    useEffect(() => {
+        planetsDispatch({
+            type: 'create',
+            data: {
+                name: 'Test',
+                icon: 'ringed',
+                iconSize: 'small',
+                iconColor: '#ff0000',
+                orbitElements: {
+                    semi: 1,
+                    ecc: 0,
+                    inc: 0,
+                    meanLong: 0,
+                    longPeri: 0,
+                    longAsc: 0
+                }
+            }
+        });
+        planetsDispatch({
+            type: 'create',
+            data: {
+                name: 'Test2',
+                icon: 'ringed',
+                iconSize: 'tiny',
+                iconColor: '#0000ff',
+                orbitElements: {
+                    semi: 1.5,
+                    ecc: 0.2,
+                    inc: 30,
+                    meanLong: 0,
+                    longPeri: 0,
+                    longAsc: 0
+                }
+            }
+        });
+    }, []);
+
+    return(
+        <>
+            <PlanetCanvas
+                planets={planets}
+                setPlanetSelected={setPlanetSelected}
+            />
+        </>
+    );
+};
 
 export default App;

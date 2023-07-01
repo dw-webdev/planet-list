@@ -22,7 +22,7 @@ const getEccAnom = (meanAnom, ecc) => {
     return eccAnom;
 };
 
-export const getOrbitCoords = (elements, frac) => {
+export const getOrbitCoords = (elements, frac = 0) => {
 
     const semi = elements.semi || 1;
     const ecc = elements.ecc || 0;
@@ -62,7 +62,7 @@ export const getOrbitPoints = (elements, count) => {
             orbitPoints.push(getOrbitCoords(elements, frac));
             frac += inc;
         }
-        orbitPoints.push(getOrbitCoords(0));
+        orbitPoints.push(getOrbitCoords(elements, 0));
     }
     return orbitPoints;
 };
