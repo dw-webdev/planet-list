@@ -2,6 +2,7 @@ import { useState, useEffect, useReducer } from 'react';
 import { planetsReducer } from './store/planetsReducer';
 
 import PlanetCanvas from './components/canvas/PlanetCanvas';
+import PlanetDetails from './components/ui/PlanetDetails';
 
 const App = () => {
 
@@ -56,10 +57,8 @@ const App = () => {
 
     return(
         <>
-            <PlanetCanvas
-                planets={planets}
-                setPlanetSelected={setPlanetSelected}
-            />
+            <PlanetCanvas planets={planets} setPlanetSelected={setPlanetSelected} />
+            <PlanetDetails planet={planetSelected} dispatch={planetsDispatch} />
         </>
     );
 };
