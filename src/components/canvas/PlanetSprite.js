@@ -1,3 +1,5 @@
+import { useLoader } from '@react-three/fiber';
+import { TextureLoader } from 'three/src/loaders/TextureLoader';
 import { getOrbitCoords } from '../../utils/orbitUtils';
 
 const getScale = (iconSize) => {
@@ -26,15 +28,18 @@ const getScale = (iconSize) => {
 
 const PlanetSprite = ({ planet, setPlanetSelected }) => {
 
-    const position = getOrbitCoords(planet.orbitElements, 0);
+    const position = planet.orbitElements ? getOrbitCoords(planet.orbitElements, 0) : [0, 0, 0];
+    const imgIcon = useLoader(TextureLoader, 'img/planet-icons/' + planet.icon + '.png');
 
     return (
         <>
             <sprite
+                key={planet.id}
                 position={position}
                 scale={[getScale(planet.iconSize), getScale(planet.iconSize), 1]}
             >
                 <spriteMaterial
+                    map={imgIcon}
                     color={planet.iconColor}
                     sizeAttenuation={false}
                 />
