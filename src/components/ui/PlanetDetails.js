@@ -12,6 +12,7 @@ const PlanetDetails = ({ planet, dispatch }) => {
             <CardBody>
                 <CardTitle>{planet ? planet.name : 'No Planet Selected'}</CardTitle>
             </CardBody>
+            {planet && (
             <Nav tabs>
                 <NavItem>
                     <NavLink className={tab === 'info' ? 'active' : ''} onClick={() => setTab('info')}>Basic Info</NavLink>
@@ -19,7 +20,8 @@ const PlanetDetails = ({ planet, dispatch }) => {
                 <NavItem>
                     <NavLink className={tab === 'orbit' ? 'active' : ''}  onClick={() => setTab('orbit')}>Orbital Elements</NavLink>
                 </NavItem>
-            </Nav>
+            </Nav>)}
+            {planet && (
             <CardBody>
                 <TabContent activeTab={tab}>
                     <TabPane tabId='info'>
@@ -29,7 +31,7 @@ const PlanetDetails = ({ planet, dispatch }) => {
                         <OrbitForm planet={planet} dispatch={dispatch} />
                     </TabPane>
                 </TabContent>
-            </CardBody>
+            </CardBody>)}
         </Card>
     );
 }

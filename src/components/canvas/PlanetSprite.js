@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { useLoader } from '@react-three/fiber';
 import { TextureLoader } from 'three/src/loaders/TextureLoader';
 import { getOrbitCoords } from '../../utils/orbitUtils';
+
+const HOVER_COLOR = '#ffffff';
 
 const getScale = (iconSize) => {
 
@@ -26,8 +29,9 @@ const getScale = (iconSize) => {
     }
 };
 
-const PlanetSprite = ({ planet, setPlanetSelected }) => {
+const PlanetSprite = ({ planet, selectPlanet }) => {
 
+    const [hover, setHover] = useState(false);
     const position = planet.orbitElements ? getOrbitCoords(planet.orbitElements, 0) : [0, 0, 0];
     const imgIcon = useLoader(TextureLoader, 'img/planet-icons/' + planet.icon + '.png');
 
@@ -37,16 +41,19 @@ const PlanetSprite = ({ planet, setPlanetSelected }) => {
                 key={planet.id}
                 position={position}
                 scale={[getScale(planet.iconSize), getScale(planet.iconSize), 1]}
+                onPointerOver={() => setHover(true)}
+                onPointerOut={() => setHover(false)}
+                onClick={() => selectPlanet(planet)}
             >
                 <spriteMaterial
                     map={imgIcon}
-                    color={planet.iconColor}
+                    color={hover ? HOVER_COLOR : planet.iconColor}
                     sizeAttenuation={false}
                 />
             </sprite>
             {planet.orbitGeometry && (
                 <line geometry={planet.orbitGeometry}>
-                    <lineBasicMaterial color={planet.iconColor} />
+                    <lineBasicMaterial color={hover ? HOVER_COLOR : planet.iconColor} />
                 </line>
             )}
         </>

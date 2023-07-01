@@ -8,6 +8,9 @@ const App = () => {
 
     const [planets, planetsDispatch] = useReducer(planetsReducer, []);
     const [planetSelected, setPlanetSelected] = useState(null);
+    const selectPlanet = (planet) => {
+        setPlanetSelected(planet !== planetSelected ? planet : null);
+    };
 
     useEffect(() => {
         planetsDispatch({
@@ -57,7 +60,7 @@ const App = () => {
 
     return(
         <>
-            <PlanetCanvas planets={planets} setPlanetSelected={setPlanetSelected} />
+            <PlanetCanvas planets={planets} selectPlanet={selectPlanet} />
             <PlanetDetails planet={planetSelected} dispatch={planetsDispatch} />
         </>
     );
