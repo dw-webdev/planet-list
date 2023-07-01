@@ -38,7 +38,6 @@ const PlanetSprite = ({ planet, selectPlanet }) => {
     return (
         <>
             <sprite
-                key={planet.id}
                 position={position}
                 scale={[getScale(planet.iconSize), getScale(planet.iconSize), 1]}
                 onPointerOver={() => setHover(true)}
