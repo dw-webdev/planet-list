@@ -1,9 +1,11 @@
-// based on https://www.danbp.org/p/en/node/139
-// getEccAnom function based on https://nbodyphysics.com/blog/2016/05/29/planetary-orbits-in-javascript/
 
 import { Vector3 } from 'three';
 
-const degToRad = deg => deg * (Math.PI / 180);
+// https://easings.net/#easeInOutSine
+
+const easeInOutSine = (frac) => -(Math.cos(Math.PI * frac) - 1) / 2;
+
+// https://nbodyphysics.com/blog/2016/05/29/planetary-orbits-in-javascript/
 
 const getEccAnom = (meanAnom, ecc) => {
 
@@ -22,7 +24,11 @@ const getEccAnom = (meanAnom, ecc) => {
     return eccAnom;
 };
 
+// https://www.danbp.org/p/en/node/139
+
 export const getOrbitCoords = (elements, frac = 0) => {
+
+    const degToRad = deg => deg * (Math.PI / 180);
 
     const semi = elements.semi || 1;
     const ecc = elements.ecc || 0;
@@ -52,17 +58,20 @@ export const getOrbitCoords = (elements, frac = 0) => {
     return new Vector3 (xEcliptic, yEcliptic, zEcliptic);
 };
 
-export const getOrbitPoints = (elements, count) => {
+export const getOrbitPoints = (elements) => {
 
+    const POINTS_PER_SEMI = 100;
+
+    const semi = elements.semi || 1;
+    const ecc = elements.ecc || 0;
+    const inc = 1 / Math.round(semi * POINTS_PER_SEMI);
+    
     const orbitPoints = [];
-    if(count > 0) {
-        const inc = 1 / count;
-        let frac = 0;
-        while(frac < 1) {
-            orbitPoints.push(getOrbitCoords(elements, frac));
-            frac += inc;
-        }
-        orbitPoints.push(getOrbitCoords(elements, 0));
+    let frac = 0;
+    while(frac < 1) {
+        orbitPoints.push(getOrbitCoords({...elements, meanLong: 0}, frac * (1 - ecc) + easeInOutSine(frac) * ecc));
+        frac += inc;
     }
+    orbitPoints.push(getOrbitCoords({...elements, meanLong: 0}, 0));
     return orbitPoints;
 };

@@ -4,7 +4,7 @@ import { getOrbitPoints } from '../utils/orbitUtils.js';
 let planetCounter = 0;
 
 const nextId = () => ++planetCounter;
-const createOrbitGeometry = (orbitElements) => new BufferGeometry().setFromPoints(getOrbitPoints(orbitElements, 100));
+const createOrbitGeometry = (orbitElements) => new BufferGeometry().setFromPoints(getOrbitPoints(orbitElements));
 
 export const planetsReducer = (planets, action) => {
 
