@@ -3,8 +3,9 @@ import { getOrbitPoints } from '../utils/orbitUtils.js';
 
 let planetCounter = 0;
 
-const nextId = () => ++planetCounter;
 const createOrbitGeometry = (orbitElements) => new BufferGeometry().setFromPoints(getOrbitPoints(orbitElements));
+
+export const nextId = () => ++planetCounter;
 
 export const planetsReducer = (planets, action) => {
 
@@ -12,7 +13,8 @@ export const planetsReducer = (planets, action) => {
 
         case 'create':
             return planets.concat([{
-                id: nextId(),
+                id: action.data.id || nextId(),
+                primaryId: action.data.primaryId || null,
                 name: action.data.name || 'New Planet',
                 icon: action.data.icon || 'simple',
                 iconSize: action.data.iconSize || 'small',
@@ -48,7 +50,7 @@ export const planetsReducer = (planets, action) => {
 export const getInitPlanets = () => {
 
     const caladanOrbit = {
-        semi: 1,
+        semi: 150000000,
         ecc: 0,
         inc: 0,
         meanLong: 0,
@@ -57,7 +59,7 @@ export const getInitPlanets = () => {
     };
 
     const arakisOrbit = {
-        semi: 1.5,
+        semi: 225000000,
         ecc: 0.2,
         inc: 30,
         meanLong: 90,
@@ -65,30 +67,32 @@ export const getInitPlanets = () => {
         longAsc: 0
     };
 
+    const sunId = nextId();
+
     return[
         {
-            id: nextId(),
+            id: sunId,
             name: 'Sun',
             icon: 'sun',
             iconSize: 'huge',
-            iconColor: '#ffff66',
-            orbitElements: null,
-            orbitGeometry: null
+            iconColor: '#ffff66'
         },
         {
             id: nextId(),
+            primaryId: sunId,
             name: 'Caladan',
             icon: 'earth',
-            iconSize: 'tiny',
+            iconSize: 'small',
             iconColor: '#3366ff',
             orbitElements: caladanOrbit,
             orbitGeometry: createOrbitGeometry(caladanOrbit)
         },
         {
             id: nextId(),
+            primaryId: sunId,
             name: 'Arakis',
             icon: 'cracked',
-            iconSize: 'small',
+            iconSize: 'medium',
             iconColor: '#ff6633',
             orbitElements: arakisOrbit,
             orbitGeometry: createOrbitGeometry(arakisOrbit)

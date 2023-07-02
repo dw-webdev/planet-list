@@ -30,7 +30,7 @@ export const getOrbitCoords = (elements, frac = 0) => {
 
     const degToRad = deg => deg * (Math.PI / 180);
 
-    const semi = elements.semi || 1;
+    const semi = (elements.semi || 150000000) / 150000000;
     const ecc = elements.ecc || 0;
     const inc = degToRad(elements.inc || 0);
     const meanLong = degToRad(elements.meanLong || 0);
@@ -60,11 +60,11 @@ export const getOrbitCoords = (elements, frac = 0) => {
 
 export const getOrbitPoints = (elements) => {
 
-    const POINTS_PER_SEMI = 100;
+    const POINT_COUNT = 100;
 
     const semi = elements.semi || 1;
     const ecc = elements.ecc || 0;
-    const inc = 1 / Math.round(semi * POINTS_PER_SEMI);
+    const inc = 1 / POINT_COUNT;
     
     const orbitPoints = [];
     let frac = 0;

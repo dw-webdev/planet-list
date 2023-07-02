@@ -9,7 +9,15 @@ const PlanetCanvas = ({ planets, selectPlanet }) => {
             <OrbitControls />
             <color attach="background" args={["black"]} />
             <ambientLight intensity={0.5} />
-            {planets.map(planet => (<PlanetSprite planet={planet} selectPlanet={selectPlanet} />))}
+            {planets.filter(planet => !planet.primaryId).map(planet => (
+            <PlanetSprite
+                key={planet.id}
+                planet={planet}
+                selectPlanet={selectPlanet}
+                planets={planets}
+                center={[0, 0, 0]}
+            />
+            ))}
         </Canvas>
     );
 };

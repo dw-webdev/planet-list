@@ -29,14 +29,14 @@ const getScale = (iconSize) => {
     }
 };
 
-const PlanetSprite = ({ planet, selectPlanet }) => {
+const PlanetSprite = ({ planet, selectPlanet, planets, center }) => {
 
     const [hover, setHover] = useState(false);
     const position = planet.orbitElements ? getOrbitCoords(planet.orbitElements, 0) : [0, 0, 0];
     const imgIcon = useLoader(TextureLoader, 'img/planet-icons/' + planet.icon + '.png');
 
     return (
-        <>
+        <group position={center}>
             <sprite
                 position={position}
                 scale={[getScale(planet.iconSize), getScale(planet.iconSize), 1]}
@@ -51,11 +51,20 @@ const PlanetSprite = ({ planet, selectPlanet }) => {
                 />
             </sprite>
             {planet.orbitGeometry && (
-                <line geometry={planet.orbitGeometry}>
-                    <lineBasicMaterial color={hover ? HOVER_COLOR : planet.iconColor} />
-                </line>
+            <line geometry={planet.orbitGeometry}>
+                <lineBasicMaterial color={hover ? HOVER_COLOR : planet.iconColor} />
+            </line>
             )}
-        </>
+            {planets.filter(moon => moon.primaryId === planet.id).map(moon => (
+            <PlanetSprite
+                key={moon.id}
+                planet={moon}
+                selectPlanet={selectPlanet}
+                planets={planets}
+                center={position}
+            />
+            ))}
+        </group>
     );
 };
 
