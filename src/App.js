@@ -4,6 +4,7 @@ import { planetsReducer, getInitPlanets } from './store/planetsReducer';
 import PlanetCanvas from './components/canvas/PlanetCanvas';
 import PlanetInfo from './components/ui/PlanetInfo';
 import PlanetControls from './components/ui/PlanetControls';
+import Sidebar from './components/ui/Sidebar';
 
 const App = () => {
 
@@ -26,6 +27,19 @@ const App = () => {
                 showEclip={showEclip}
                 exMoonOrb={exMoonOrb}
             />
+
+            <PlanetControls
+                showEclip={showEclip}
+                setShowEclip={setShowEclip}
+                exMoonOrb={exMoonOrb}
+                setExMoonOrb={setExMoonOrb}
+            />
+            <Sidebar />
+        </>
+    );
+};
+
+/*
             <PlanetInfo
                 planet={planetSelected}
                 selectPlanet={selectPlanet}
@@ -34,14 +48,6 @@ const App = () => {
                 infoTab={infoTab}
                 setInfoTab={setInfoTab}
             />
-            <PlanetControls
-                showEclip={showEclip}
-                setShowEclip={setShowEclip}
-                exMoonOrb={exMoonOrb}
-                setExMoonOrb={setExMoonOrb}
-            />
-        </>
-    );
-};
+*/
 
 export default App;
