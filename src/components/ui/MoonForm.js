@@ -1,20 +1,21 @@
-import { ListGroup, ListGroupItem, Button } from 'reactstrap';
+import { Button } from 'reactstrap';
 
 const MoonForm = ({ planet, selectPlanet, planets, dispatch }) => {
 
     const getRandomPlanet = (primaryId) => {
 
         const existingCount = planets.filter(moon => moon.primaryId === primaryId).length;
-        const primaryIsSun = !planets.find(primary => primary.id === primaryId).primaryId;
+        const isMoon = !!planets.find(primary => primary.id === primaryId).primaryId;
 
         return {
             primaryId,
-            name: (primaryIsSun ? 'Planet ' : 'Moon ') + (existingCount + 1),
+            isMoon,
+            name: (isMoon ? 'Moon ' : 'Planet ') + (existingCount + 1),
             icon: 'simple',
-            iconSize: primaryIsSun ? 'small' : 'tiny',
+            iconSize: isMoon ? 'tiny' : 'small',
             iconColor: '#808080',
             orbitElements: {
-                semi: (Math.pow(existingCount, 2) * 0.5 + 1) * (primaryIsSun ? 150000000 : 250000)
+                semi: (Math.pow(existingCount, 2) * 0.5 + 1) * (isMoon ? 125000 : 75000000)
             }
         }
     };

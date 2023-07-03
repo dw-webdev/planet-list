@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useLoader } from '@react-three/fiber';
 import { TextureLoader } from 'three/src/loaders/TextureLoader';
 import { getOrbitCoords } from '../../utils/orbitUtils';
+import { EXAGERATE_MOON_ORBIT } from '../../store/planetsReducer';
 
 const HOVER_COLOR = '#ffffff';
 
@@ -29,15 +30,16 @@ const getScale = (iconSize) => {
     }
 };
 
-const PlanetSprite = ({ planet, selectPlanet, planets, center }) => {
+const PlanetSprite = ({ planet, selectPlanet, planets, center, exMoonOrb }) => {
 
     const [hover, setHover] = useState(false);
-    const position = planet.orbitElements ? getOrbitCoords(planet.orbitElements, 0) : [0, 0, 0];
     const imgIcon = useLoader(TextureLoader, 'img/planet-icons/' + planet.icon + '.png');
+    const position = planet.orbitElements ? getOrbitCoords(exMoonOrb && planet.isMoon ? {...planet.orbitElements, semi: planet.orbitElements.semi * EXAGERATE_MOON_ORBIT} : planet.orbitElements, 0) : [0, 0, 0];
 
     return (
         <group position={center}>
             <sprite
+                renderOrder={2}
                 position={position}
                 scale={[getScale(planet.iconSize), getScale(planet.iconSize), 1]}
                 onPointerOver={() => setHover(true)}
@@ -51,7 +53,7 @@ const PlanetSprite = ({ planet, selectPlanet, planets, center }) => {
                 />
             </sprite>
             {planet.orbitGeometry && (
-            <line geometry={planet.orbitGeometry}>
+            <line renderOrder={1} geometry={exMoonOrb && planet.isMoon ? planet.orbitGeometryEx : planet.orbitGeometry}>
                 <lineBasicMaterial color={hover ? HOVER_COLOR : planet.iconColor} />
             </line>
             )}
@@ -62,6 +64,7 @@ const PlanetSprite = ({ planet, selectPlanet, planets, center }) => {
                 selectPlanet={selectPlanet}
                 planets={planets}
                 center={position}
+                exMoonOrb={exMoonOrb}
             />
             ))}
         </group>
