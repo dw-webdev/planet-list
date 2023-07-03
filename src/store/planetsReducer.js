@@ -4,7 +4,7 @@ import { getRandomColor } from '../utils/colorUtils';
 
 let planetCounter = 0;
 
-export const EXAGERATE_MOON_ORBIT = 100;
+export const EXAGERATE_MOON_ORBIT = 200;
 
 const nextId = () => ++planetCounter;
 
@@ -50,7 +50,7 @@ export const planetsReducer = (planets, action) => {
             });
 
         case 'delete':
-            return planets.filter(planet => planet.id !== action.data);
+            return planets.filter(planet => planet.id !== action.data && planet.primaryId !== action.data);
 
         default:
             return planets;

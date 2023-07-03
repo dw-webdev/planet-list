@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { Collapse } from 'reactstrap';
 import PlanetControls from './PlanetControls';
 import PlanetInfo from './PlanetInfo';
+import PlanetList from './PlanetList';
 
-const Sidebar = ({ planet, selectPlanet, planets, dispatch, infoTab, setInfoTab, showEclip, setShowEclip, exMoonOrb, setExMoonOrb }) => {
+const Sidebar = ({ planet, selectPlanet, planets, dispatch, addRemove, setAddRemove, infoTab, setInfoTab, showEclip, setShowEclip, exMoonOrb, setExMoonOrb }) => {
 
     const [isOpen, setIsOpen] = useState(true);
 
@@ -16,12 +17,34 @@ const Sidebar = ({ planet, selectPlanet, planets, dispatch, infoTab, setInfoTab,
             </div>
             <Collapse horizontal isOpen={isOpen}>
                 <div style={{ width: 400, height: '100vh', overflowY: 'scroll' }}>
-                <PlanetControls
-                    showEclip={showEclip}
-                    setShowEclip={setShowEclip}
-                    exMoonOrb={exMoonOrb}
-                    setExMoonOrb={setExMoonOrb}
-                />
+                    <PlanetControls
+                        showEclip={showEclip}
+                        setShowEclip={setShowEclip}
+                        exMoonOrb={exMoonOrb}
+                        setExMoonOrb={setExMoonOrb}
+                    />
+                    <PlanetList
+                        planet={planet}
+                        selectPlanet={selectPlanet}
+                        planets = {planets}
+                        dispatch={dispatch}
+                        addRemove={addRemove}
+                        setAddRemove={setAddRemove}
+                    />
+                    <PlanetInfo
+                        planet={planet}
+                        planets={planets}
+                        dispatch={dispatch}
+                        infoTab={infoTab}
+                        setInfoTab={setInfoTab}
+                    />
+                </div>
+            </Collapse>
+        </div>
+    );
+}
+
+/*
                 <PlanetInfo
                     planet={planet}
                     selectPlanet={selectPlanet}
@@ -30,11 +53,7 @@ const Sidebar = ({ planet, selectPlanet, planets, dispatch, infoTab, setInfoTab,
                     infoTab={infoTab}
                     setInfoTab={setInfoTab}
                 />
-                </div>
-            </Collapse>
-        </div>
-    );
-}
+*/
 
 const styles = {
     toggleButton: {

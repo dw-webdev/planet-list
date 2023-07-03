@@ -8,10 +8,13 @@ const App = () => {
 
     const [planets, planetsDispatch] = useReducer(planetsReducer, getInitPlanets());
     const [planetSelected, setPlanetSelected] = useState(null);
-    const [infoTab, setInfoTab] = useState('moons');
+    const [infoTab, setInfoTab] = useState('info');
+    const [addRemove, setAddRemove] = useState(false);
     const selectPlanet = (planet) => {
-        setPlanetSelected(planet !== planetSelected ? planet : null);
-        setInfoTab('moons');
+        if(!addRemove) {
+            setPlanetSelected(planet !== planetSelected ? planet : null);
+            setInfoTab('info');
+        }
     };
 
     const [showEclip, setShowEclip] = useState(false);
@@ -30,6 +33,8 @@ const App = () => {
                 selectPlanet={selectPlanet}
                 planets={planets}
                 dispatch={planetsDispatch}
+                addRemove={addRemove}
+                setAddRemove={setAddRemove}
                 infoTab={infoTab}
                 setInfoTab={setInfoTab}
                 showEclip={showEclip}
