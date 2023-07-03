@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Collapse } from 'reactstrap';
+import PlanetControls from './PlanetControls';
+import PlanetInfo from './PlanetInfo';
 
-const Sidebar = () => {
+const Sidebar = ({ planet, selectPlanet, planets, dispatch, infoTab, setInfoTab, showEclip, setShowEclip, exMoonOrb, setExMoonOrb }) => {
 
     const [isOpen, setIsOpen] = useState(true);
 
@@ -13,8 +15,21 @@ const Sidebar = () => {
                 </div>
             </div>
             <Collapse horizontal isOpen={isOpen}>
-                <div style={{ width: 300 }}>
-                    sidebar
+                <div style={{ width: 400, height: '100vh', overflowY: 'scroll' }}>
+                <PlanetControls
+                    showEclip={showEclip}
+                    setShowEclip={setShowEclip}
+                    exMoonOrb={exMoonOrb}
+                    setExMoonOrb={setExMoonOrb}
+                />
+                <PlanetInfo
+                    planet={planet}
+                    selectPlanet={selectPlanet}
+                    planets={planets}
+                    dispatch={dispatch}
+                    infoTab={infoTab}
+                    setInfoTab={setInfoTab}
+                />
                 </div>
             </Collapse>
         </div>

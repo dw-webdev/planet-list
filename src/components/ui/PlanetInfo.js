@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, CardTitle, CardSubtitle, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
+import { Button, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import InfoForm from './InfoForm';
 import OrbitForm from './OrbitForm';
 import MoonForm from './MoonForm';
@@ -6,16 +6,14 @@ import MoonForm from './MoonForm';
 const PlanetInfo = ({ planet, selectPlanet, planets, dispatch, infoTab, setInfoTab }) => {
 
     return (
-        <Card style={{position: 'absolute', top: 0, left: 0, width: 275 }}>
-            <CardBody>
-                <CardTitle>{planet ? planet.name : 'No Planet Selected'}</CardTitle>
-                {planet && planet.primaryId && (
-                <Button style={{ float: 'right' }} onClick={() => selectPlanet(planets.find(primary => primary.id === planet.primaryId))}>&larr;</Button>
-                )}
-                {planet && planet.primaryId && (
-                <CardSubtitle>Orbiting {planets.find(primary => primary.id === planet.primaryId).name}</CardSubtitle>
-                )}
-            </CardBody>
+        <div style={{ padding: '1em' }}>
+            <p>{planet ? planet.name : 'No Planet Selected'}</p>
+            {planet && planet.primaryId && (
+            <Button style={{ float: 'right' }} onClick={() => selectPlanet(planets.find(primary => primary.id === planet.primaryId))}>&larr;</Button>
+            )}
+            {planet && planet.primaryId && (
+            <p>Orbiting {planets.find(primary => primary.id === planet.primaryId).name}</p>
+            )}
             {planet && (
             <Nav tabs>
                 <NavItem>
@@ -29,22 +27,22 @@ const PlanetInfo = ({ planet, selectPlanet, planets, dispatch, infoTab, setInfoT
                     <NavLink className={infoTab === 'orbit' ? 'active' : ''}  onClick={() => setInfoTab('orbit')}>Orbit</NavLink>
                 </NavItem>
                 )}
-            </Nav>)}
+            </Nav>
+            )}
             {planet && (
-            <CardBody>
-                <TabContent activeTab={infoTab}>
-                    <TabPane tabId='info'>
-                        <InfoForm planet={planet} dispatch={dispatch} />
-                    </TabPane>
-                    {planet.orbitElements && (<TabPane tabId='orbit'>
-                        <OrbitForm planet={planet} planets={planets} dispatch={dispatch} />
-                    </TabPane>)}
-                    <TabPane tabId='moons'>
-                        <MoonForm planet={planet} selectPlanet={selectPlanet} planets={planets} dispatch={dispatch} />
-                    </TabPane>
-                </TabContent>
-            </CardBody>)}
-        </Card>
+            <TabContent activeTab={infoTab}>
+                <TabPane tabId='info'>
+                    <InfoForm planet={planet} dispatch={dispatch} />
+                </TabPane>
+                {planet.orbitElements && (<TabPane tabId='orbit'>
+                    <OrbitForm planet={planet} planets={planets} dispatch={dispatch} />
+                </TabPane>)}
+                <TabPane tabId='moons'>
+                    <MoonForm planet={planet} selectPlanet={selectPlanet} planets={planets} dispatch={dispatch} />
+                </TabPane>
+            </TabContent>
+            )}
+        </div>
     );
 }
 
