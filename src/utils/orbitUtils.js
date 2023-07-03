@@ -60,17 +60,18 @@ export const getOrbitCoords = (elements, frac = 0) => {
 
 export const getOrbitPoints = (elements) => {
 
-    const POINT_COUNT = 100;
+    const POINTS_ECC_LOW = 75;
+    const POINTS_ECC_HIGH = 1500;
 
-    const semi = elements.semi || 1;
     const ecc = elements.ecc || 0;
-    const inc = 1 / POINT_COUNT;
-    
+    const step = 1 / Math.round(POINTS_ECC_LOW * (1 - Math.pow(ecc, 2)) + POINTS_ECC_HIGH * Math.pow(ecc, 2));
     const orbitPoints = [];
+
     let frac = 0;
+
     while(frac < 1) {
         orbitPoints.push(getOrbitCoords({...elements, meanLong: 0}, frac * (1 - ecc) + easeInOutSine(frac) * ecc));
-        frac += inc;
+        frac += step;
     }
     orbitPoints.push(getOrbitCoords({...elements, meanLong: 0}, 0));
     return orbitPoints;

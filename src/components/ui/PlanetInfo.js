@@ -1,4 +1,5 @@
-import { Button, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
+import { useState } from 'react';
+import { Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import InfoForm from './InfoForm';
 import OrbitForm from './OrbitForm';
 
@@ -6,7 +7,10 @@ import { usePlanetsProvider } from '../providers/PlanetsProvider';
 
 const PlanetInfo = () => {
 
-    const { selectedPlanet, planets, dispatch, infoTab, setInfoTab } = usePlanetsProvider();
+    const { selectedPlanet, planets, dispatch } = usePlanetsProvider();
+    const [infoTab, setInfoTab] = useState('info');
+
+    if(infoTab === 'orbit' && !selectedPlanet?.orbitElements) setInfoTab('info');
 
     return (
         <div style={{ padding: '1em' }}>

@@ -1,5 +1,8 @@
+import { useState } from 'react';
 import { ListGroup, ListGroupItem, Form, FormGroup, Input, Label } from 'reactstrap';
 import { usePlanetsProvider } from '../providers/PlanetsProvider';
+import PlanetAddModal from './PlanetAddModal';
+import PlanetRemoveModal from './PlanetRemoveModal';
 
 const PlanetList = () => {
 
@@ -23,16 +26,6 @@ const PlanetList = () => {
         }
     };
 
-    const addPlanet = (primaryId) => {
-        dispatch({ type: 'create', data: getRandomPlanet(primaryId) });
-        //console.log('add planet');
-    };
-
-    const removePlanet = (id) => {
-        dispatch({ type: 'delete', data: id });
-        //console.log('remove planet ' + id);
-    };
-
     const renderNestedList = (renderPlanet, depth) => {
 
         const childPlanets = planets.filter(childPlanet => childPlanet.primaryId === renderPlanet.id);
@@ -47,7 +40,7 @@ const PlanetList = () => {
                         textAlign: 'left',
                         paddingLeft: (depth * 1.5 + 0.75) + 'em'
                     }}
-                    onClick={() => editMode ? removePlanet(renderPlanet.id) : selectPlanet(renderPlanet)}
+                    onClick={() => editMode ? openRemoveModal(renderPlanet) : selectPlanet(renderPlanet)}
                     >
                     {editMode ? (
                     <span style={{ color: '#800000' }}>&times; {renderPlanet.name}</span>
@@ -64,14 +57,29 @@ const PlanetList = () => {
                         textAlign: 'left',
                         paddingLeft: ((depth + 1) * 1.5 + 0.75) + 'em'
                     }}
-                    onClick={() => addPlanet(renderPlanet.id)}
+                    onClick={() => openAddModal(renderPlanet)}
                     >
                     <span style={{ color: '#008000'}}>+ Add new&hellip;</span>
                 </ListGroupItem>
                 )}
             </>
         );
-    };    
+    };
+
+    const openAddModal = (primary) => {
+        setAddPrimary(primary);
+        setAddModal(true);
+    };
+    
+    const openRemoveModal = (planet) => {
+        setRemovePlanet(planet);
+        setRemoveModal(true);
+    };
+
+    const [addModal, setAddModal] = useState(false);
+    const [addPrimary, setAddPrimary] = useState(null);
+    const [removeModal, setRemoveModal] = useState(false);
+    const [removePlanet, setRemovePlanet] = useState(null);
 
     const rootPlanets = planets.filter(rootPlanet => rootPlanet.primaryId === null);
 
@@ -86,6 +94,19 @@ const PlanetList = () => {
             <ListGroup>
                 {rootPlanets.map(rootPlanet => renderNestedList(rootPlanet, 0))}   
             </ListGroup>
+            <PlanetAddModal
+                isOpen={addModal}
+                setIsOpen={setAddModal}
+                primary={addPrimary}
+                planets={planets}
+                dispatch={dispatch}
+            />
+            <PlanetRemoveModal
+                isOpen={removeModal}
+                setIsOpen={setRemoveModal}
+                planet={removePlanet}
+                dispatch={dispatch}
+            />
         </div>
     );
 };

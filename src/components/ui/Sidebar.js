@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { Collapse } from 'reactstrap';
 import ViewControls from './ViewControls';
 import PlanetInfo from './PlanetInfo';
@@ -16,26 +16,17 @@ const Sidebar = () => {
                 </div>
             </div>
             <Collapse horizontal isOpen={isOpen}>
-                <div style={{ width: 400, height: '100vh', overflowY: 'scroll' }}>
+                <div style={{ width: 400, height: '50vh', overflowY: 'scroll' }}>
                     <ViewControls />
                     <PlanetList />
+                </div>
+                <div style={{ width: 400, height: '50vh', overflowY: 'scroll' }}>
                     <PlanetInfo />
                 </div>
             </Collapse>
         </div>
     );
 }
-
-/*
-                <PlanetInfo
-                    planet={planet}
-                    selectPlanet={selectPlanet}
-                    planets={planets}
-                    dispatch={dispatch}
-                    infoTab={infoTab}
-                    setInfoTab={setInfoTab}
-                />
-*/
 
 const styles = {
     toggleButton: {
