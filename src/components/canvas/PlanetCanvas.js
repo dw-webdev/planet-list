@@ -3,7 +3,13 @@ import { OrbitControls } from '@react-three/drei';
 import EclipticPlane from './EclipticPlane';
 import PlanetSprite from './PlanetSprite';
 
-const PlanetCanvas = ({ planets, selectPlanet, showEclip, exMoonOrb }) => {
+import { usePlanetsProvider } from '../providers/PlanetsProvider';
+import { useViewControlsProvider } from '../providers/ViewControlsProvider';
+
+const PlanetCanvas = () => {
+
+    const { planets, selectPlanet } = usePlanetsProvider();
+    const { showEclip, exMoonOrb } = useViewControlsProvider();
 
     return(
         <Canvas style={{ width: '100%', height: '100vh', position: 'absolute', zIndex: -1 }}>

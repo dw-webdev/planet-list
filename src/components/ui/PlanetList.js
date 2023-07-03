@@ -1,7 +1,9 @@
-import { useState } from 'react';
 import { ListGroup, ListGroupItem, Form, FormGroup, Input, Label } from 'reactstrap';
+import { usePlanetsProvider } from '../providers/PlanetsProvider';
 
-const PlanetList = ({ planet, selectPlanet, planets, dispatch, addRemove, setAddRemove }) => {
+const PlanetList = () => {
+
+    const { planets, dispatch, selectedPlanet, selectPlanet, editMode, setEditMode } = usePlanetsProvider();
 
     const getRandomPlanet = (primaryId) => {
 
@@ -40,21 +42,21 @@ const PlanetList = ({ planet, selectPlanet, planets, dispatch, addRemove, setAdd
                 <ListGroupItem
                     key={renderPlanet.id}
                     tag="button"
-                    active={renderPlanet === planet}
+                    active={renderPlanet === selectedPlanet}
                     style={{
                         textAlign: 'left',
                         paddingLeft: (depth * 1.5 + 0.75) + 'em'
                     }}
-                    onClick={() => addRemove ? removePlanet(renderPlanet.id) : selectPlanet(renderPlanet)}
+                    onClick={() => editMode ? removePlanet(renderPlanet.id) : selectPlanet(renderPlanet)}
                     >
-                    {addRemove && renderPlanet.primaryId !== null ? (
+                    {editMode ? (
                     <span style={{ color: '#800000' }}>&times; {renderPlanet.name}</span>
                     ) : (
                     <span>{renderPlanet.name}</span>
                     )}
                 </ListGroupItem>
                 {childPlanets.map(childPlanet => renderNestedList(childPlanet, depth + 1))}
-                {addRemove && (
+                {editMode && (
                 <ListGroupItem
                     key={renderPlanet.id + '-add'}
                     tag="button"
@@ -77,7 +79,7 @@ const PlanetList = ({ planet, selectPlanet, planets, dispatch, addRemove, setAdd
         <div style={{ padding: '1em' }}>
             <Form>
                 <FormGroup check inline>
-                <Input type="checkbox" checked={addRemove} onChange={(event) => { setAddRemove(event.target.checked); selectPlanet(null); }} />
+                <Input type="checkbox" checked={editMode} onChange={(event) => { setEditMode(event.target.checked); selectPlanet(null); }} />
                     <Label check>Add/Remove</Label>
                 </FormGroup>
             </Form>

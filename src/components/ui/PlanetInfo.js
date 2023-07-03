@@ -2,33 +2,37 @@ import { Button, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import InfoForm from './InfoForm';
 import OrbitForm from './OrbitForm';
 
-const PlanetInfo = ({ planet, planets, dispatch, infoTab, setInfoTab }) => {
+import { usePlanetsProvider } from '../providers/PlanetsProvider';
+
+const PlanetInfo = () => {
+
+    const { selectedPlanet, planets, dispatch, infoTab, setInfoTab } = usePlanetsProvider();
 
     return (
         <div style={{ padding: '1em' }}>
-            <p>{planet ? planet.name : 'No Planet Selected'}</p>
-            {planet && planet.primaryId && (
-            <p>Orbiting {planets.find(primary => primary.id === planet.primaryId).name}</p>
+            <p>{selectedPlanet ? selectedPlanet.name : 'No Planet Selected'}</p>
+            {selectedPlanet && selectedPlanet.primaryId && (
+            <p>Orbiting {planets.find(primary => primary.id === selectedPlanet.primaryId).name}</p>
             )}
-            {planet && (
+            {selectedPlanet && (
             <Nav tabs>
                 <NavItem>
                     <NavLink className={infoTab === 'info' ? 'active' : ''} onClick={() => setInfoTab('info')}>Info</NavLink>
                 </NavItem>
-                {planet.orbitElements && (
+                {selectedPlanet.orbitElements && (
                 <NavItem>
                     <NavLink className={infoTab === 'orbit' ? 'active' : ''}  onClick={() => setInfoTab('orbit')}>Orbit</NavLink>
                 </NavItem>
                 )}
             </Nav>
             )}
-            {planet && (
+            {selectedPlanet && (
             <TabContent activeTab={infoTab}>
                 <TabPane tabId='info'>
-                    <InfoForm planet={planet} dispatch={dispatch} />
+                    <InfoForm planet={selectedPlanet} dispatch={dispatch} />
                 </TabPane>
-                {planet.orbitElements && (<TabPane tabId='orbit'>
-                    <OrbitForm planet={planet} planets={planets} dispatch={dispatch} />
+                {selectedPlanet.orbitElements && (<TabPane tabId='orbit'>
+                    <OrbitForm planet={selectedPlanet} planets={planets} dispatch={dispatch} />
                 </TabPane>)}
             </TabContent>
             )}

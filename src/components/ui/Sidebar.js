@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Collapse } from 'reactstrap';
-import PlanetControls from './PlanetControls';
+import ViewControls from './ViewControls';
 import PlanetInfo from './PlanetInfo';
 import PlanetList from './PlanetList';
 
-const Sidebar = ({ planet, selectPlanet, planets, dispatch, addRemove, setAddRemove, infoTab, setInfoTab, showEclip, setShowEclip, exMoonOrb, setExMoonOrb }) => {
+const Sidebar = () => {
 
     const [isOpen, setIsOpen] = useState(true);
 
@@ -17,27 +17,9 @@ const Sidebar = ({ planet, selectPlanet, planets, dispatch, addRemove, setAddRem
             </div>
             <Collapse horizontal isOpen={isOpen}>
                 <div style={{ width: 400, height: '100vh', overflowY: 'scroll' }}>
-                    <PlanetControls
-                        showEclip={showEclip}
-                        setShowEclip={setShowEclip}
-                        exMoonOrb={exMoonOrb}
-                        setExMoonOrb={setExMoonOrb}
-                    />
-                    <PlanetList
-                        planet={planet}
-                        selectPlanet={selectPlanet}
-                        planets = {planets}
-                        dispatch={dispatch}
-                        addRemove={addRemove}
-                        setAddRemove={setAddRemove}
-                    />
-                    <PlanetInfo
-                        planet={planet}
-                        planets={planets}
-                        dispatch={dispatch}
-                        infoTab={infoTab}
-                        setInfoTab={setInfoTab}
-                    />
+                    <ViewControls />
+                    <PlanetList />
+                    <PlanetInfo />
                 </div>
             </Collapse>
         </div>

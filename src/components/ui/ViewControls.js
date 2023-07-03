@@ -1,7 +1,10 @@
 import { Form, FormGroup, Label, Input } from 'reactstrap';
+import { useViewControlsProvider } from '../providers/ViewControlsProvider';
 
-const PlanetControls = ({ showEclip, setShowEclip, exMoonOrb, setExMoonOrb }) => {
+const PlanetControls = () => {
 
+    const { showEclip, setShowEclip, exMoonOrb, setExMoonOrb } = useViewControlsProvider();
+    
     return (
         <Form style={{ padding: '1em' }}>
             <FormGroup check inline>
