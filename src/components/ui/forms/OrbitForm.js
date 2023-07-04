@@ -108,7 +108,7 @@ const OrbitForm = ({ planet, dispatch }) => {
                     onChange={(event) => setLongAsc(event.target.value)}
                 />
             </FormGroup>
-            <Button type='submit'>Apply Changes</Button>
+            <Button type='submit' block color='primary'>Apply Changes</Button>
         </Form>
     );
 }

@@ -17,6 +17,7 @@ const createPlanet = (data) => {
         isMoon: data.isMoon || false,
         period: data.orbitElements ? Math.sqrt(Math.pow(data.orbitElements.semi/ (data.isMoon ? 250000 : 150000000), 3)) * (data.isMoon ? 10 : 120) : null,
         name: data.name || 'New Planet',
+        desc: data.desc || '',
         icon: data.icon || 'simple',
         iconSize: data.iconSize || 'small',
         iconColor: data.iconColor || '#ffffff',
@@ -37,6 +38,7 @@ export const planetsReducer = (planets, action) => {
             return planets.map(planet => planet.id !== action.data.id ? planet : {
                 ...planet,
                 name: action.data.name,
+                desc: action.data.desc,
                 icon: action.data.icon,
                 iconSize: action.data.iconSize,
                 iconColor: action.data.iconColor

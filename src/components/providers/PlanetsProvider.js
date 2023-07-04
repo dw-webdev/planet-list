@@ -7,7 +7,7 @@ const PlanetsProvider = ({ children }) => {
 
     const [planets, dispatch] = useReducer(planetsReducer, getInitPlanets());
     const [selectedPlanet, setSelectedPlanet] = useState(null);
-    const selectPlanet = (planet) => setSelectedPlanet((planet !== selectedPlanet && !editMode) ? planet : null);
+    const selectPlanet = (planet) => { if(!editMode) setSelectedPlanet(planet); };
     const [editMode, setEditMode] = useState(false);
 
     return (

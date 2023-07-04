@@ -1,44 +1,44 @@
 import { useState } from 'react';
-import { Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
-import InfoForm from './InfoForm';
-import OrbitForm from './OrbitForm';
+import { Card, CardBody, Accordion, AccordionItem, AccordionHeader, AccordionBody } from 'reactstrap';
+import InfoForm from './forms/InfoForm';
+import OrbitForm from './forms/OrbitForm';
 
 import { usePlanetsProvider } from '../providers/PlanetsProvider';
 
 const PlanetInfo = () => {
 
-    const { selectedPlanet, planets, dispatch } = usePlanetsProvider();
+    const { selectedPlanet, planets, dispatch, editMode } = usePlanetsProvider();
     const [infoTab, setInfoTab] = useState('info');
 
     if(infoTab === 'orbit' && !selectedPlanet?.orbitElements) setInfoTab('info');
 
     return (
-        <div style={{ padding: '1em' }}>
-            <p>{selectedPlanet ? selectedPlanet.name : 'No Planet Selected'}</p>
-            {selectedPlanet && selectedPlanet.primaryId && (
-            <p>Orbiting {planets.find(primary => primary.id === selectedPlanet.primaryId).name}</p>
-            )}
-            {selectedPlanet && (
-            <Nav tabs>
-                <NavItem>
-                    <NavLink className={infoTab === 'info' ? 'active' : ''} onClick={() => setInfoTab('info')}>Info</NavLink>
-                </NavItem>
-                {selectedPlanet.orbitElements && (
-                <NavItem>
-                    <NavLink className={infoTab === 'orbit' ? 'active' : ''}  onClick={() => setInfoTab('orbit')}>Orbit</NavLink>
-                </NavItem>
+        <div style={{ marginTop: '0.5em' }}>
+            {!selectedPlanet && (
+            <Card className='border-primary text-primary'>
+                {!editMode && (
+                <CardBody style={{ padding: '1em 1.5em' }}>Click  an object in the list or 3D view to show details.</CardBody>
                 )}
-            </Nav>
+                {editMode && (
+                <CardBody style={{ padding: '1em 1.5em' }}>Finish editing to show details.</CardBody>
+                )}
+            </Card>
             )}
             {selectedPlanet && (
-            <TabContent activeTab={infoTab}>
-                <TabPane tabId='info'>
-                    <InfoForm planet={selectedPlanet} dispatch={dispatch} />
-                </TabPane>
-                {selectedPlanet.orbitElements && (<TabPane tabId='orbit'>
-                    <OrbitForm planet={selectedPlanet} planets={planets} dispatch={dispatch} />
-                </TabPane>)}
-            </TabContent>
+            <Accordion open={infoTab} toggle={(id) => setInfoTab(id)}>
+                <AccordionItem>
+                    <AccordionHeader targetId="info">Info</AccordionHeader>
+                    <AccordionBody accordionId="info">
+                        <InfoForm planet={selectedPlanet} dispatch={dispatch} />
+                    </AccordionBody>
+                </AccordionItem>
+                <AccordionItem>
+                    <AccordionHeader targetId="orbit">Orbit</AccordionHeader>
+                    <AccordionBody accordionId="orbit">
+                        <OrbitForm planet={selectedPlanet} planets={planets} dispatch={dispatch} />
+                    </AccordionBody>
+                </AccordionItem>
+            </Accordion>
             )}
         </div>
     );

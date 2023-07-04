@@ -1,34 +1,17 @@
 import { useState } from 'react';
-import { ListGroup, ListGroupItem, Form, FormGroup, Input, Label } from 'reactstrap';
+import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 import { usePlanetsProvider } from '../providers/PlanetsProvider';
-import PlanetAddModal from './PlanetAddModal';
-import PlanetRemoveModal from './PlanetRemoveModal';
+import PlanetAddModal from './modals/PlanetAddModal';
+import PlanetRemoveModal from './modals/PlanetRemoveModal';
 
 const PlanetList = () => {
 
     const { planets, dispatch, selectedPlanet, selectPlanet, editMode, setEditMode } = usePlanetsProvider();
 
-    const getRandomPlanet = (primaryId) => {
-
-        const existingCount = planets.filter(moon => moon.primaryId === primaryId).length;
-        const isMoon = !!planets.find(primary => primary.id === primaryId).primaryId;
-
-        return {
-            primaryId,
-            isMoon,
-            name: (isMoon ? 'Moon ' : 'Planet ') + (existingCount + 1),
-            icon: 'simple',
-            iconSize: isMoon ? 'tiny' : 'small',
-            iconColor: '#808080',
-            orbitElements: {
-                semi: (Math.pow(existingCount, 2) * 0.5 + 1) * (isMoon ? 125000 : 75000000)
-            }
-        }
-    };
-
     const renderNestedList = (renderPlanet, depth) => {
 
         const childPlanets = planets.filter(childPlanet => childPlanet.primaryId === renderPlanet.id);
+        const planetName = renderPlanet.name || '<Unnamed>';
 
         return (
             <>
@@ -38,30 +21,30 @@ const PlanetList = () => {
                     active={renderPlanet === selectedPlanet}
                     style={{
                         textAlign: 'left',
-                        paddingLeft: (depth * 1.5 + 0.75) + 'em'
+                        paddingLeft: (depth * 0.75 + 0.75) + 'em'
                     }}
                     onClick={() => editMode ? openRemoveModal(renderPlanet) : selectPlanet(renderPlanet)}
                     >
                     {editMode ? (
-                    <span style={{ color: '#800000' }}>&times; {renderPlanet.name}</span>
+                    <span className='text-danger'>&times; {planetName}</span>
                     ) : (
-                    <span>{renderPlanet.name}</span>
+                    <span>{planetName}</span>
                     )}
                 </ListGroupItem>
-                {childPlanets.map(childPlanet => renderNestedList(childPlanet, depth + 1))}
-                {editMode && (
+                {editMode && depth < 2 && (
                 <ListGroupItem
                     key={renderPlanet.id + '-add'}
                     tag="button"
                     style={{
                         textAlign: 'left',
-                        paddingLeft: ((depth + 1) * 1.5 + 0.75) + 'em'
+                        paddingLeft: ((depth + 1) * 0.75 + 0.75) + 'em'
                     }}
                     onClick={() => openAddModal(renderPlanet)}
                     >
-                    <span style={{ color: '#008000'}}>+ Add new&hellip;</span>
+                    <span className='text-success'>+ Add {depth === 0 ? 'Planet' : 'Moon'}&hellip;</span>
                 </ListGroupItem>
                 )}
+                {childPlanets.map(childPlanet => renderNestedList(childPlanet, depth + 1))}
             </>
         );
     };
@@ -84,28 +67,30 @@ const PlanetList = () => {
     const rootPlanets = planets.filter(rootPlanet => rootPlanet.primaryId === null);
 
     return (
-        <div style={{ padding: '1em' }}>
-            <Form>
-                <FormGroup check inline>
-                <Input type="checkbox" checked={editMode} onChange={(event) => { setEditMode(event.target.checked); selectPlanet(null); }} />
-                    <Label check>Add/Remove</Label>
-                </FormGroup>
-            </Form>
+        <div style={{ marginTop: '0.5em' }}>
             <ListGroup>
                 {rootPlanets.map(rootPlanet => renderNestedList(rootPlanet, 0))}   
             </ListGroup>
+            <Button
+                block
+                color={!editMode ? 'primary' : 'secondary'}
+                style={{ marginTop: '1em' }}
+                onClick={() => {
+                    selectPlanet(null);
+                    setEditMode(!editMode);
+                }}
+            >
+                {!editMode ? 'Edit' : 'Cancel'}
+            </Button>
             <PlanetAddModal
                 isOpen={addModal}
                 setIsOpen={setAddModal}
                 primary={addPrimary}
-                planets={planets}
-                dispatch={dispatch}
             />
             <PlanetRemoveModal
                 isOpen={removeModal}
                 setIsOpen={setRemoveModal}
                 planet={removePlanet}
-                dispatch={dispatch}
             />
         </div>
     );
