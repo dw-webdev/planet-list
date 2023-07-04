@@ -17,17 +17,17 @@ const PlanetInfo = () => {
             {!selectedPlanet && (
             <Card className='border-primary text-primary'>
                 {!editMode && (
-                <CardBody style={{ padding: '1em 1.5em' }}>Click  an object in the list or 3D view to show details.</CardBody>
+                <CardBody style={{ padding: '1em 1.5em' }}>Click  an object in the list or 3D view to show/edit details.</CardBody>
                 )}
                 {editMode && (
-                <CardBody style={{ padding: '1em 1.5em' }}>Finish editing to show details.</CardBody>
+                <CardBody style={{ padding: '1em 1.5em' }}>Finish editing system to show/edit details of objects.</CardBody>
                 )}
             </Card>
             )}
             {selectedPlanet && (
             <Accordion open={infoTab} toggle={(id) => setInfoTab(id)}>
                 <AccordionItem>
-                    <AccordionHeader targetId="info">Info</AccordionHeader>
+                    <AccordionHeader targetId="info">Display</AccordionHeader>
                     <AccordionBody accordionId="info">
                         <InfoForm planet={selectedPlanet} dispatch={dispatch} />
                     </AccordionBody>

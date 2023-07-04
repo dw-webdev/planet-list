@@ -5,7 +5,7 @@ const sizeOpts = ['tiny', 'small', 'medium', 'large', 'huge'];
 
 const capitalize = (text) => text.substr(0, 1).toUpperCase() + text.substr(1);
 
-const InfoFormFields = ({ singleCol, name, setName, desc, setDesc, icon, setIcon, size, setSize, color, setColor }) => {
+const InfoFormFields = ({ singleCol, name, setName, desc, setDesc, icon, setIcon, size, setSize, color, setColor, setChanged }) => {
 
     return (
         <Container style={{ padding: 0 }}>
@@ -19,7 +19,10 @@ const InfoFormFields = ({ singleCol, name, setName, desc, setDesc, icon, setIcon
                             placeholder='Name'
                             autoComplete='off'
                             value={name}
-                            onChange={(event) => setName(event.target.value)}
+                            onChange={(event) => {
+                                setName(event.target.value);
+                                if(setChanged) setChanged(true);
+                            }}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -31,7 +34,10 @@ const InfoFormFields = ({ singleCol, name, setName, desc, setDesc, icon, setIcon
                             placeholder='Description'
                             autoComplete='off'
                             value={desc}
-                            onChange={(event) => setDesc(event.target.value)}
+                            onChange={(event) => {
+                                setDesc(event.target.value);
+                                if(setChanged) setChanged(true);
+                            }}
                         />
                     </FormGroup>
                 </Col>
@@ -44,7 +50,10 @@ const InfoFormFields = ({ singleCol, name, setName, desc, setDesc, icon, setIcon
                                 name='icon'
                                 id='icon'
                                 value={icon}
-                                onChange={(event) => setIcon(event.target.value)}
+                                onChange={(event) => {
+                                    setIcon(event.target.value);
+                                    if(setChanged) setChanged(true);
+                                }}
                             >
                                 {iconOpts.map(iconOpt => (
                                 <option
@@ -65,7 +74,10 @@ const InfoFormFields = ({ singleCol, name, setName, desc, setDesc, icon, setIcon
                                 name='size'
                                 id='size'
                                 value={size}
-                                onChange={(event) => setSize(event.target.value)}
+                                onChange={(event) => {
+                                    setSize(event.target.value);
+                                    if(setChanged) setChanged(true);
+                                }}
                             >
                                 {sizeOpts.map(sizeOpt => (
                                 <option
@@ -87,7 +99,10 @@ const InfoFormFields = ({ singleCol, name, setName, desc, setDesc, icon, setIcon
                                 id="color"
                                 value={color}
                                 style={{ height: '2.5em', padding: '0.75em' }}
-                                onChange={(event) => setColor(event.target.value)}
+                                onChange={(event) => {
+                                    setColor(event.target.value);
+                                    if(setChanged) setChanged(true);
+                                }}
                             />
                         </Col>
                     </FormGroup>

@@ -9,6 +9,7 @@ const InfoForm = ({ planet, dispatch }) => {
     const [icon, setIcon] = useState('');
     const [size, setSize] = useState('');
     const [color, setColor] = useState('');
+    const [changed, setChanged] = useState(false);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -20,6 +21,7 @@ const InfoForm = ({ planet, dispatch }) => {
             iconSize: event.target['size'].value,
             iconColor: event.target['color'].value
         }});
+        setChanged(false);
     }
 
     useEffect(() => {
@@ -41,8 +43,9 @@ const InfoForm = ({ planet, dispatch }) => {
                 icon={icon} setIcon={setIcon}
                 size={size} setSize={setSize}
                 color={color} setColor={setColor}
+                setChanged={setChanged}
             />
-            <Button type='submit' block color='primary'>Apply Changes</Button>
+            <Button type='submit' block color='primary' disabled={!changed}>Apply Changes</Button>
         </Form>
     );
 }

@@ -9,13 +9,13 @@ const PlanetControls = () => {
         <Card style={{ margin: '1em 0' }}>
             <CardBody style={{ padding: '0.5em 0.75em' }}>
                 <Form>
-                    <FormGroup check inline>
-                        <Input type="checkbox" checked={exMoonOrb} onChange={(event) => setExMoonOrb(event.target.checked)} />
+                    <FormGroup switch inline>
+                        <Input role='switch' type='switch' checked={exMoonOrb} onChange={(event) => setExMoonOrb(event.target.checked)} />
                         <Label check>Exagerate Moon Orbits</Label>
                     </FormGroup>
-                    <FormGroup check inline>
-                        <Input type="checkbox" checked={showEclip} onChange={(event) => setShowEclip(event.target.checked)} />
-                        <Label check>Show Ecliptic</Label>
+                    <FormGroup switch inline>
+                        <Input role='switch' type='switch' checked={showEclip} onChange={(event) => setShowEclip(event.target.checked)} />
+                        <Label check>Show Ecliptic Plane</Label>
                     </FormGroup>
                 </Form>
             </CardBody>

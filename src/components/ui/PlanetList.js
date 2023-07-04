@@ -68,20 +68,20 @@ const PlanetList = () => {
 
     return (
         <div style={{ marginTop: '0.5em' }}>
-            <ListGroup>
-                {rootPlanets.map(rootPlanet => renderNestedList(rootPlanet, 0))}   
-            </ListGroup>
             <Button
                 block
                 color={!editMode ? 'primary' : 'secondary'}
-                style={{ marginTop: '1em' }}
+                style={{ marginBottom: '1.5em' }}
                 onClick={() => {
                     selectPlanet(null);
                     setEditMode(!editMode);
                 }}
             >
-                {!editMode ? 'Edit' : 'Cancel'}
+                {!editMode ? 'Edit System' : 'Finish Editing'}
             </Button>
+            <ListGroup style={{ marginBottom: '1em' }}>
+                {rootPlanets.map(rootPlanet => renderNestedList(rootPlanet, 0))}   
+            </ListGroup>
             <PlanetAddModal
                 isOpen={addModal}
                 setIsOpen={setAddModal}

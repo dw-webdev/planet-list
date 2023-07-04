@@ -5,7 +5,7 @@ import InfoFormFields from '../forms/InfoFormFields';
 
 const PlanetAddModal = ({ isOpen, setIsOpen, primary }) => {
 
-    const { planets, dispatch, setEditMode } = usePlanetsProvider();
+    const { planets, dispatch } = usePlanetsProvider();
 
     const [name, setName] = useState('');
     const [desc, setDesc] = useState('');
@@ -40,7 +40,6 @@ const PlanetAddModal = ({ isOpen, setIsOpen, primary }) => {
                 semi: (Math.pow(satellites.length, 2) * 0.5 + 1) * (isMoon ? 125000 : 75000000)
             }
         }});
-        setEditMode(false);
         setIsOpen(false);
         console.log(planets[planets.length - 1]);
     }
@@ -48,7 +47,7 @@ const PlanetAddModal = ({ isOpen, setIsOpen, primary }) => {
     return(
         <Modal isOpen={isOpen} toggle={() => setIsOpen(!isOpen)}>
             <Form onSubmit={handleSubmit}>
-                <ModalHeader className='bg-success text-light'>New satellite of {primary?.name}</ModalHeader>
+                <ModalHeader className='bg-primary text-light'>New satellite of {primary?.name}</ModalHeader>
                 <ModalBody>
                     <InfoFormFields
                         singleCol={false}
@@ -60,7 +59,7 @@ const PlanetAddModal = ({ isOpen, setIsOpen, primary }) => {
                     />
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="success" type='submit'>Create</Button>
+                    <Button color="primary" type='submit'>Create</Button>
                     <Button color="secondary" onClick={() => setIsOpen(false)}>Cancel</Button>
                 </ModalFooter>
             </Form>
