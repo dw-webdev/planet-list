@@ -2,7 +2,7 @@ import { EllipseCurve, BufferGeometry, Vector3 } from 'three';
 
 const EclipticPlane = () => {
 
-    const RING_COLOR = '#808080';
+    const RING_COLOR = '#80a0c0';
     const RING_OPACITY = 0.25;
     const RING_COUNT = 25;
 

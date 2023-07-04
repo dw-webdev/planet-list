@@ -14,7 +14,7 @@ const PlanetCanvas = () => {
     return(
         <Canvas style={{ width: '100%', height: '100vh', position: 'absolute', zIndex: -1 }}>
             <OrbitControls />
-            <color attach="background" args={["black"]} />
+            <color attach="background" args={["#002040"]} />
             <ambientLight intensity={0.5} />
             {showEclip && (
             <EclipticPlane />

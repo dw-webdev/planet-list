@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLoader } from '@react-three/fiber';
+import { useLoader, useFrame } from '@react-three/fiber';
 import { TextureLoader } from 'three/src/loaders/TextureLoader';
 import { getOrbitCoords } from '../../utils/orbitUtils';
 import { EXAGERATE_MOON_ORBIT } from '../../store/planetsReducer';
@@ -32,9 +32,19 @@ const getScale = (iconSize) => {
 
 const PlanetSprite = ({ planet, selectPlanet, planets, center, exMoonOrb }) => {
 
-    const [hover, setHover] = useState(false);
     const imgIcon = useLoader(TextureLoader, 'img/planet-icons/' + planet.icon + '.png');
-    const position = planet.orbitElements ? getOrbitCoords(exMoonOrb && planet.isMoon ? {...planet.orbitElements, semi: planet.orbitElements.semi * EXAGERATE_MOON_ORBIT} : planet.orbitElements, 0) : [0, 0, 0];
+    
+    const [hover, setHover] = useState(false);
+
+    const [orbit, setOrbit] = useState(0);
+    const [position, setPosition] = useState([0, 0, 0]);
+
+    useFrame((_, delta) => {
+        if(planet.orbitElements) {
+            setOrbit(orbit + delta <= planet.period ? orbit + delta : 0);
+            setPosition(getOrbitCoords(exMoonOrb && planet.isMoon ? {...planet.orbitElements, semi: planet.orbitElements.semi * EXAGERATE_MOON_ORBIT} : planet.orbitElements, orbit / planet.period));
+        }
+    });
 
     return (
         <group position={center}>

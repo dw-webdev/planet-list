@@ -15,6 +15,7 @@ const createPlanet = (data) => {
         id: data.id || nextId(),
         primaryId: data.primaryId || null,
         isMoon: data.isMoon || false,
+        period: data.orbitElements ? Math.sqrt(Math.pow(data.orbitElements.semi/ (data.isMoon ? 250000 : 150000000), 3)) * (data.isMoon ? 10 : 120) : null,
         name: data.name || 'New Planet',
         icon: data.icon || 'simple',
         iconSize: data.iconSize || 'small',
@@ -44,6 +45,7 @@ export const planetsReducer = (planets, action) => {
         case 'update-orbit':
             return planets.map(planet => planet.id !== action.data.id ? planet : {
                 ...planet,
+                period: action.data.orbitElements ? Math.sqrt(Math.pow(action.data.orbitElements.semi/ (planet.isMoon ? 250000 : 150000000), 3)) * (planet.isMoon ? 10 : 120) : null,
                 orbitElements: action.data.orbitElements || null,
                 orbitGeometry: action.data.orbitElements ? createOrbitGeometry(action.data.orbitElements) : null,
                 orbitGeometryEx: (action.data.orbitElements && planet.isMoon) ? createOrbitGeometry({...action.data.orbitElements, semi: action.data.orbitElements.semi * EXAGERATE_MOON_ORBIT}) : null
@@ -93,7 +95,7 @@ export const getInitPlanets = () => {
         iconColor: sunColors[sunVariant]
     }));
 
-    for(let i = 0, l = Math.floor(Math.random() * 3) + 3; i < l; i++) {
+    for(let i = 0, l = Math.floor(Math.random() * 4) + 2; i < l; i++) {
 
         const planetSize = pick(planetSizes);
         const planetId = nextId();
