@@ -9,6 +9,7 @@ const OrbitForm = ({ planet, dispatch }) => {
     const [meanLong, setMeanLong] = useState(0);
     const [longPeri, setLongPeri] = useState(0);
     const [longAsc, setLongAsc] = useState(0);
+    const [period, setPeriod] = useState(0);
     const [changed, setChanged] = useState(false);
 
     const handleSubmit = (event) => {
@@ -34,11 +35,12 @@ const OrbitForm = ({ planet, dispatch }) => {
         setMeanLong(planet.orbitElements?.meanLong || 0);
         setLongPeri(planet.orbitElements?.longPeri || 0);
         setLongAsc(planet.orbitElements?.longAsc || 0);
+        setPeriod(365);
     }, [planet]);
 
     return (
         <Form onSubmit={handleSubmit}>
-            <UncontrolledTooltip target='tooltipSemi' placement='right'>Semi-major Axis</UncontrolledTooltip>
+            <UncontrolledTooltip target='tooltipSemi' placement='right'>Semi-major Axis (km)</UncontrolledTooltip>
             <FormGroup row id='tooltipSemi'>
                 <Label xs={2} for='semi' style={{ fontStyle: 'italic' }}>a</Label>
                 <Col xs={10}>
@@ -143,6 +145,18 @@ const OrbitForm = ({ planet, dispatch }) => {
                             setLongAsc(event.target.value);
                             setChanged(true);
                         }}
+                    />
+                </Col>
+            </FormGroup>
+            <UncontrolledTooltip target='tooltipPeriod' placement='right'>Orbital Period (days)</UncontrolledTooltip>
+            <FormGroup row id='tooltipPeriod'>
+                <Label xs={2} for='period' style={{ fontStyle: 'italic' }} className='text-primary'>T</Label>
+                <Col xs={10}>
+                    <Input
+                        name='period'
+                        id='period'
+                        value={period}
+                        className='border-primary'
                     />
                 </Col>
             </FormGroup>

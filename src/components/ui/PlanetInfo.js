@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Card, CardBody, Accordion, AccordionItem, AccordionHeader, AccordionBody } from 'reactstrap';
 import InfoForm from './forms/InfoForm';
 import OrbitForm from './forms/OrbitForm';
+import SurfaceForm from './forms/SurfaceForm';
 
 import { usePlanetsProvider } from '../providers/PlanetsProvider';
 
@@ -36,6 +37,12 @@ const PlanetInfo = () => {
                     <AccordionHeader targetId="orbit">Orbit</AccordionHeader>
                     <AccordionBody accordionId="orbit">
                         <OrbitForm planet={selectedPlanet} planets={planets} dispatch={dispatch} />
+                    </AccordionBody>
+                </AccordionItem>
+                <AccordionItem>
+                    <AccordionHeader targetId="surface">Surface</AccordionHeader>
+                    <AccordionBody accordionId="surface">
+                        <SurfaceForm planet={selectedPlanet} planets={planets} dispatch={dispatch} />
                     </AccordionBody>
                 </AccordionItem>
             </Accordion>
