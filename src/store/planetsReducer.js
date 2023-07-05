@@ -15,7 +15,9 @@ const createPlanet = (data) => {
         id: data.id || nextId(),
         primaryId: data.primaryId || null,
         isMoon: data.isMoon || false,
-        period: data.orbitElements ? Math.sqrt(Math.pow(data.orbitElements.semi/ (data.isMoon ? 250000 : 150000000), 3)) * (data.isMoon ? 10 : 120) : null,
+        mass: data.mass || 1,
+        radius: data.radius || 1,
+        period: data.orbitElements ? (data.isMoon ? 10 : 120) : null,
         name: data.name || 'New Planet',
         desc: data.desc || '',
         icon: data.icon || 'simple',
@@ -47,11 +49,18 @@ export const planetsReducer = (planets, action) => {
         case 'update-orbit':
             return planets.map(planet => planet.id !== action.data.id ? planet : {
                 ...planet,
-                period: action.data.orbitElements ? Math.sqrt(Math.pow(action.data.orbitElements.semi/ (planet.isMoon ? 250000 : 150000000), 3)) * (planet.isMoon ? 10 : 120) : null,
+                period: action.data.orbitElements ? (planet.isMoon ? 10 : 120) : null,
                 orbitElements: action.data.orbitElements || null,
                 orbitGeometry: action.data.orbitElements ? createOrbitGeometry(action.data.orbitElements) : null,
                 orbitGeometryEx: (action.data.orbitElements && planet.isMoon) ? createOrbitGeometry({...action.data.orbitElements, semi: action.data.orbitElements.semi * EXAGERATE_MOON_ORBIT}) : null
             });
+
+            case 'update-surface':
+                return planets.map(planet => planet.id !== action.data.id ? planet : {
+                    ...planet,
+                    mass: action.data.mass,
+                    radius: action.data.radius
+                });
 
         case 'delete':
             return planets.filter(planet => planet.id !== action.data && planet.primaryId !== action.data);
@@ -92,6 +101,8 @@ export const getInitPlanets = () => {
     initPlanets.push(createPlanet({
         id: sunId,
         name: 'Star',
+        mass: 333030,
+        radius: 109,
         icon: 'sun',
         iconSize: sunSizes[sunVariant],
         iconColor: sunColors[sunVariant]
@@ -110,9 +121,9 @@ export const getInitPlanets = () => {
             iconSize: planetSize,
             iconColor: getRandomColor(),
             orbitElements: {
-                semi: Math.round((Math.pow(i, 2) * 0.5 + Math.random() * 0.25 + 1) * 75000000),
+                semi: ((Math.pow(i, 2) * 0.5 + Math.random() * 0.25 + 1) * 0.5).toFixed(2),
                 ecc: (Math.random() * 0.15).toFixed(2),
-                inc: Math.floor(Math.random() * 5),
+                inc: Math.floor(Math.random() * 10) - 5,
                 meanLong: Math.round(Math.random() * 360) - 180,
                 longPeri: Math.round(Math.random() * 360) - 180,
                 longAsc: Math.round(Math.random() * 360) - 180
@@ -131,9 +142,9 @@ export const getInitPlanets = () => {
                 iconSize: moonSize,
                 iconColor: getRandomColor(),
                 orbitElements: {
-                    semi: Math.round(( Math.pow(j, 2) * 0.5 + Math.random() * 0.25 + 1) * 125000),
+                    semi: ((Math.pow(j, 2) * 0.5 + Math.random() * 0.25 + 1) * 0.001).toFixed(5),
                     ecc: (Math.random() * 0.15).toFixed(2),
-                    inc: Math.floor(Math.random() * 5),
+                    inc: Math.floor(Math.random() * 10) - 5,
                     meanLong: Math.round(Math.random() * 360) - 180,
                     longPeri: Math.round(Math.random() * 360) - 180,
                     longAsc: Math.round(Math.random() * 360) - 180
@@ -151,9 +162,9 @@ export const getInitPlanets = () => {
             iconSize: 'tiny',
             iconColor: getRandomColor(),
             orbitElements: {
-                semi: Math.round((Math.pow(i, 2) * 0.5 + Math.random() * 0.25 + 1) * 750000000),
+                semi: ((Math.pow(i, 2) * 0.5 + Math.random() * 0.25 + 1) * 5).toFixed(2),
                 ecc: (Math.random() * 0.2 + 0.75).toFixed(2),
-                inc: Math.floor(Math.random() * 90),
+                inc: Math.floor(Math.random() * 180) - 90,
                 meanLong: Math.round(Math.random() * 360) - 180,
                 longPeri: Math.round(Math.random() * 360) - 180,
                 longAsc: Math.round(Math.random() * 360) - 180

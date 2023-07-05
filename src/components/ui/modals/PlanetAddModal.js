@@ -37,7 +37,7 @@ const PlanetAddModal = ({ isOpen, setIsOpen, primary }) => {
             iconSize: event.target['size'].value,
             iconColor: event.target['color'].value,
             orbitElements: {
-                semi: (Math.pow(satellites.length, 2) * 0.5 + 1) * (isMoon ? 125000 : 75000000)
+                semi: (Math.pow(satellites.length, 2) * 0.5 + 1) * (isMoon ? 0.001 : 0.5)
             }
         }});
         setIsOpen(false);

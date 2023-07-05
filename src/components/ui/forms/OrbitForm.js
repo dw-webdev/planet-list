@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Form, FormGroup, Col, Input, Label, UncontrolledTooltip, Button } from 'reactstrap';
+import { getOrbitalPeriod } from '../../../utils/physicsUtils';
 
-const OrbitForm = ({ planet, dispatch }) => {
+
+const OrbitForm = ({ planet, planets, dispatch }) => {
 
     const [semi, setSemi] = useState(1);
     const [ecc, setEcc] = useState(0);
@@ -29,18 +31,20 @@ const OrbitForm = ({ planet, dispatch }) => {
     }
 
     useEffect(() => {
-        setSemi(planet.orbitElements?.semi || 1);
-        setEcc(planet.orbitElements?.ecc || 0);
-        setInc(planet.orbitElements?.inc || 0);
-        setMeanLong(planet.orbitElements?.meanLong || 0);
-        setLongPeri(planet.orbitElements?.longPeri || 0);
-        setLongAsc(planet.orbitElements?.longAsc || 0);
-        setPeriod(365);
+        if(planet.orbitElements) {
+            setSemi(planet.orbitElements.semi);
+            setEcc(planet.orbitElements.ecc);
+            setInc(planet.orbitElements.inc);
+            setMeanLong(planet.orbitElements.meanLong);
+            setLongPeri(planet.orbitElements.longPeri);
+            setLongAsc(planet.orbitElements.longAsc);
+            setPeriod(getOrbitalPeriod(planets.find(primary => primary.id === planet.primaryId).mass, planet.orbitElements?.semi).toFixed(planet.isMoon ? 5 : 2));
+        }
     }, [planet]);
 
     return (
         <Form onSubmit={handleSubmit}>
-            <UncontrolledTooltip target='tooltipSemi' placement='right'>Semi-major Axis (km)</UncontrolledTooltip>
+            <UncontrolledTooltip target='tooltipSemi' placement='right'>Semi-major Axis (AU)</UncontrolledTooltip>
             <FormGroup row id='tooltipSemi'>
                 <Label xs={2} for='semi' style={{ fontStyle: 'italic' }}>a</Label>
                 <Col xs={10}>
@@ -49,9 +53,9 @@ const OrbitForm = ({ planet, dispatch }) => {
                         id='semi'
                         type='number'
                         value={semi}
-                        min={1}
                         onChange={(event) => {
                             setSemi(event.target.value);
+                            setPeriod(getOrbitalPeriod(planets.find(primary => primary.id === planet.primaryId).mass, event.target.value).toFixed(planet.isMoon ? 5 : 2));
                             setChanged(true);
                         }}
                     />
@@ -148,11 +152,12 @@ const OrbitForm = ({ planet, dispatch }) => {
                     />
                 </Col>
             </FormGroup>
-            <UncontrolledTooltip target='tooltipPeriod' placement='right'>Orbital Period (days)</UncontrolledTooltip>
+            <UncontrolledTooltip target='tooltipPeriod' placement='right'>Orbital Period (Earth years)</UncontrolledTooltip>
             <FormGroup row id='tooltipPeriod'>
                 <Label xs={2} for='period' style={{ fontStyle: 'italic' }} className='text-primary'>T</Label>
                 <Col xs={10}>
                     <Input
+                        readOnly
                         name='period'
                         id='period'
                         value={period}
