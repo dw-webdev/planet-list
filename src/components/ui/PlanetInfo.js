@@ -33,13 +33,13 @@ const PlanetInfo = () => {
                     </AccordionBody>
                 </AccordionItem>
                 <AccordionItem>
-                    <AccordionHeader targetId="orbit">Orbital</AccordionHeader>
+                    <AccordionHeader targetId="orbit">Orbit</AccordionHeader>
                     <AccordionBody accordionId="orbit">
                         <OrbitForm planet={selectedPlanet} planets={planets} dispatch={dispatch} />
                     </AccordionBody>
                 </AccordionItem>
                 <AccordionItem>
-                    <AccordionHeader targetId="surface">Physical</AccordionHeader>
+                    <AccordionHeader targetId="surface">Surface</AccordionHeader>
                     <AccordionBody accordionId="surface">
                         <SurfaceForm planet={selectedPlanet} planets={planets} dispatch={dispatch} />
                     </AccordionBody>

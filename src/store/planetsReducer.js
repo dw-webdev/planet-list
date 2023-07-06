@@ -4,34 +4,35 @@ import { getOrbitalPeriod } from '../utils/physicsUtils';
 
 let planetCounter = 0;
 
-export const EXAGERATE_MOON_ORBIT = 100;
-
 const nextId = () => ++planetCounter;
+
+export const EXAGERATE_MOON_ORBIT = 100;
 
 export const planetsReducer = (planets, action) => {
 
     const createPlanet = (data) => {
         return {
             id: data.id || nextId(),
-            isMoon: data.isMoon || false,
-            mass: data.mass || 1,
-            radius: data.radius || 1,
             name: data.name || '',
             desc: data.desc || '',
             icon: data.icon || 'simple',
             iconSize: data.iconSize || 'small',
             iconColor: data.iconColor || '#808080',
-            orbit: data.orbit ? createOrbit(data.orbit, data.isMoon) : null
+            density: data.density || 1,
+            radius: data.radius || 1,
+            mass: data.mass || 1,
+            orbit: data.orbit ? createOrbit(data.orbit) : null
         };
     };
 
-    const createOrbit = (orbit, exagerate = false) => {
-
+    const createOrbit = (orbit) => {
+        const primary = planets.find(planet => planet.id === orbit.primaryId);
+        const primaryIsCentral = !planets.find(planet => planet.id === primary.id).orbit;
         return {
             ...orbit,
-            period: getOrbitalPeriod(planets.find(planet => planet.id === orbit.primaryId).mass, orbit.semi),
+            period: getOrbitalPeriod(primary.mass, orbit.semi),
             geom: new BufferGeometry().setFromPoints(getOrbitPoints(orbit)),
-            geomEx: exagerate ? new BufferGeometry().setFromPoints(getOrbitPoints({...orbit, semi: orbit.semi * EXAGERATE_MOON_ORBIT})) : null
+            geomEx: !primaryIsCentral ? new BufferGeometry().setFromPoints(getOrbitPoints({...orbit, semi: orbit.semi * EXAGERATE_MOON_ORBIT})) : null
         };
     };
 
@@ -53,18 +54,19 @@ export const planetsReducer = (planets, action) => {
         case 'update-orbit':
             return planets.map(planet => planet.id !== action.data.id ? planet : {
                 ...planet,
-                orbit: createOrbit(action.data.orbit, planet.isMoon)
+                orbit: createOrbit(action.data.orbit)
             });
 
         case 'update-surface':
             return planets.map(planet => planet.id !== action.data.id ? planet : {
                 ...planet,
-                mass: action.data.mass,
-                radius: action.data.radius
+                density: action.data.density,
+                radius: action.data.radius,
+                mass: action.data.mass
             });
 
         case 'delete':
-            return planets.filter(planet => planet.id !== action.data && planet.orbit?.primaryId !== action.data);
+            return planets.filter(planet => planet.id !== action.data);
 
         default:
             return planets;
@@ -96,16 +98,18 @@ export const getInitPlanets = () => {
     
     return [{
         id: sunId,
-        mass: 333030,
+        density: 1417.83855, // not sure if this is correct but it makes the other numbers line up
         radius: 109,
+        mass: 333030,
         name: 'Sun',
         icon: 'sun',
         iconSize: 'huge',
         iconColor: '#ffc060'
     },{
         id: earthId,
-        mass: 1,
+        density: 5513,
         radius: 1,
+        mass: 1,
         name: 'Earth',
         icon: 'earth',
         iconSize: 'small',
@@ -118,9 +122,9 @@ export const getInitPlanets = () => {
         }
     },{
         id: nextId(),
-        isMoon: true,
-        mass: 0.0123,
+        density: 3340,
         radius: 0.2727,
+        mass: 0.0123,
         name: 'Moon',
         icon: 'moon',
         iconSize: 'tiny',
@@ -200,7 +204,6 @@ export const getInitPlanets = () => {
             const moonSize = pick(moonSizes[planetSize]);
 
             initPlanets.push(createPlanet({
-                isMoon: true,
                 name: 'Moon ' + (j + 1),
                 icon: pick(moonIcons[moonSize]),
                 iconSize: moonSize,

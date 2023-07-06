@@ -3,7 +3,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Form, Button } from 'reacts
 import { usePlanetsProvider } from '../../providers/PlanetsProvider';
 import InfoFormFields from '../forms/InfoFormFields';
 
-const PlanetAddModal = ({ isOpen, setIsOpen, primary }) => {
+const PlanetAddModal = ({ isOpen, setIsOpen, planet }) => {
 
     const { planets, dispatch } = usePlanetsProvider();
 
@@ -15,7 +15,8 @@ const PlanetAddModal = ({ isOpen, setIsOpen, primary }) => {
 
     useEffect(() => {
         if(isOpen) {
-            setName((isMoon ? 'Moon ' : 'Planet ') + (satellites.length + 1));
+            const isMoon = !!planet.orbit;
+            setName(isMoon ? 'New Moon' : 'New Planet');
             setDesc('');
             setIcon('simple');
             setSize(isMoon ? 'tiny' : 'small');
@@ -23,22 +24,21 @@ const PlanetAddModal = ({ isOpen, setIsOpen, primary }) => {
         }
     }, [isOpen]);
 
-    const satellites = primary ? planets.filter(satellite => satellite.orbit?.primaryId === primary.id) : [];
-    const isMoon = primary ? !!planets.find(planet => planet.id === primary.id).orbit : false;
-
     const handleSubmit = (event) => {
         event.preventDefault();
+        const isMoon = !!planet.orbit;
+        const satellites = planets.filter(satellite => satellite.orbit?.primaryId === planet.id);
+        const greatestSemi = satellites.length > 0 ? satellites.sort((a, b) => b.orbit.semi - a.orbit.semi)[0].orbit.semi : 0;
         dispatch({ type: 'create', data: {
-            isMoon,
             name: event.target['name'].value,
             desc: event.target['desc'].value,
             icon: event.target['icon'].value,
             iconSize: event.target['size'].value,
             iconColor: event.target['color'].value,
             orbit: {
-                primaryId: primary.id,
-                semi: (Math.pow(satellites.length, 2) * 0.5 + 1) * (isMoon ? 0.001 : 0.5),
-                ecc: (Math.random() * 0.15).toFixed(2),
+                primaryId: planet.id,
+                semi: (isMoon ? 0.001 : 1) * (Math.random() * 2.5 + 0.5) + greatestSemi,
+                ecc: (Math.random() * 0.1).toFixed(2),
                 inc: Math.floor(Math.random() * 10) - 5,
                 meanLong: Math.round(Math.random() * 360) - 180,
                 longPeri: Math.round(Math.random() * 360) - 180,
@@ -46,13 +46,12 @@ const PlanetAddModal = ({ isOpen, setIsOpen, primary }) => {
             }
         }});
         setIsOpen(false);
-        console.log(planets[planets.length - 1]);
     }
     
     return(
         <Modal isOpen={isOpen} toggle={() => setIsOpen(!isOpen)}>
             <Form onSubmit={handleSubmit}>
-                <ModalHeader className='bg-primary text-light'>New satellite of {primary?.name}</ModalHeader>
+                <ModalHeader className='bg-primary text-light'>Create {!planet?.orbit ? 'planet around' : 'moon of'} {planet?.name}</ModalHeader>
                 <ModalBody>
                     <InfoFormFields
                         singleCol={false}

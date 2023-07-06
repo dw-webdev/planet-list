@@ -50,7 +50,7 @@ const PlanetList = () => {
     };
 
     const openAddModal = (primary) => {
-        setAddPrimary(primary);
+        setAddPlanet(primary);
         setAddModal(true);
     };
     
@@ -60,7 +60,7 @@ const PlanetList = () => {
     };
 
     const [addModal, setAddModal] = useState(false);
-    const [addPrimary, setAddPrimary] = useState(null);
+    const [addPlanet, setAddPlanet] = useState(null);
     const [removeModal, setRemoveModal] = useState(false);
     const [removePlanet, setRemovePlanet] = useState(null);
 
@@ -85,7 +85,7 @@ const PlanetList = () => {
             <PlanetAddModal
                 isOpen={addModal}
                 setIsOpen={setAddModal}
-                primary={addPrimary}
+                planet={addPlanet}
             />
             <PlanetRemoveModal
                 isOpen={removeModal}

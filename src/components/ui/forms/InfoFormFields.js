@@ -1,6 +1,6 @@
 import {Container, Row, Col, FormGroup, Input, Label} from 'reactstrap';
 
-const iconOpts = ['simple', 'ringed', 'earth', 'moon', 'sun', 'cracked', 'striped', 'potato', 'black-hole', 'barycenter'];
+const iconOpts = ['simple', 'ringed', 'earth', 'moon', 'sun', 'cracked', 'striped', 'potato', 'black-hole'];
 const sizeOpts = ['tiny', 'small', 'medium', 'large', 'huge'];
 
 const capitalize = (text) => text.substr(0, 1).toUpperCase() + text.substr(1);

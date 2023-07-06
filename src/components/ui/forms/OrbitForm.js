@@ -39,7 +39,7 @@ const OrbitForm = ({ planet, planets, dispatch }) => {
             setMeanLong(planet.orbit.meanLong);
             setLongPeri(planet.orbit.longPeri);
             setLongAsc(planet.orbit.longAsc);
-            setPeriod(getOrbitalPeriod(planets.find(primary => primary.id === planet.orbit.primaryId).mass, planet.orbit?.semi).toFixed(planet.isMoon ? 6 : 2));
+            setPeriod(planet.orbit.period.toFixed(planet.orbit.period < 0.1 ? 4 : 2));
         }
     }, [planet]);
 
@@ -56,7 +56,7 @@ const OrbitForm = ({ planet, planets, dispatch }) => {
                         value={semi}
                         onChange={(event) => {
                             setSemi(event.target.value);
-                            setPeriod(getOrbitalPeriod(planets.find(primary => primary.id === planet.orbit.primaryId).mass, event.target.value).toFixed(planet.isMoon ? 6 : 2));
+                            setPeriod(getOrbitalPeriod(planets.find(primary => primary.id === planet.orbit.primaryId).mass, event.target.value));
                             setChanged(true);
                         }}
                     />
