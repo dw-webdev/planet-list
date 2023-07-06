@@ -23,21 +23,26 @@ const PlanetAddModal = ({ isOpen, setIsOpen, primary }) => {
         }
     }, [isOpen]);
 
-    const satellites = primary ? planets.filter(satellite => satellite.primaryId === primary.id) : [];
-    const isMoon = primary ? !!planets.find(planet => planet.id === primary.id).primaryId : false;
+    const satellites = primary ? planets.filter(satellite => satellite.orbit?.primaryId === primary.id) : [];
+    const isMoon = primary ? !!planets.find(planet => planet.id === primary.id).orbit : false;
 
     const handleSubmit = (event) => {
         event.preventDefault();
         dispatch({ type: 'create', data: {
-            primaryId: primary.id,
             isMoon,
             name: event.target['name'].value,
             desc: event.target['desc'].value,
             icon: event.target['icon'].value,
             iconSize: event.target['size'].value,
             iconColor: event.target['color'].value,
-            orbitElements: {
-                semi: (Math.pow(satellites.length, 2) * 0.5 + 1) * (isMoon ? 0.001 : 0.5)
+            orbit: {
+                primaryId: primary.id,
+                semi: (Math.pow(satellites.length, 2) * 0.5 + 1) * (isMoon ? 0.001 : 0.5),
+                ecc: (Math.random() * 0.15).toFixed(2),
+                inc: Math.floor(Math.random() * 10) - 5,
+                meanLong: Math.round(Math.random() * 360) - 180,
+                longPeri: Math.round(Math.random() * 360) - 180,
+                longAsc: Math.round(Math.random() * 360) - 180
             }
         }});
         setIsOpen(false);

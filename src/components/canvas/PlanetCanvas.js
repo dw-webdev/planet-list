@@ -19,7 +19,7 @@ const PlanetCanvas = () => {
             {showEclip && (
             <EclipticPlane />
             )}
-            {planets.filter(planet => !planet.primaryId).map(planet => (
+            {planets.filter(planet => !planet.orbit).map(planet => (
             <PlanetSprite
                 key={planet.id}
                 planet={planet}

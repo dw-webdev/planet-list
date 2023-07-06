@@ -18,7 +18,8 @@ const OrbitForm = ({ planet, planets, dispatch }) => {
         event.preventDefault();
         dispatch({ type: 'update-orbit', data: {
             id: planet.id,
-            orbitElements: {
+            orbit: {
+                primaryId: planet.orbit.primaryId,
                 semi: event.target['semi'].value,
                 ecc: event.target['ecc'].value,
                 inc: event.target['inc'].value,
@@ -31,14 +32,14 @@ const OrbitForm = ({ planet, planets, dispatch }) => {
     }
 
     useEffect(() => {
-        if(planet.orbitElements) {
-            setSemi(planet.orbitElements.semi);
-            setEcc(planet.orbitElements.ecc);
-            setInc(planet.orbitElements.inc);
-            setMeanLong(planet.orbitElements.meanLong);
-            setLongPeri(planet.orbitElements.longPeri);
-            setLongAsc(planet.orbitElements.longAsc);
-            setPeriod(getOrbitalPeriod(planets.find(primary => primary.id === planet.primaryId).mass, planet.orbitElements?.semi).toFixed(planet.isMoon ? 5 : 2));
+        if(planet.orbit) {
+            setSemi(planet.orbit.semi);
+            setEcc(planet.orbit.ecc);
+            setInc(planet.orbit.inc);
+            setMeanLong(planet.orbit.meanLong);
+            setLongPeri(planet.orbit.longPeri);
+            setLongAsc(planet.orbit.longAsc);
+            setPeriod(getOrbitalPeriod(planets.find(primary => primary.id === planet.orbit.primaryId).mass, planet.orbit?.semi).toFixed(planet.isMoon ? 6 : 2));
         }
     }, [planet]);
 
@@ -55,7 +56,7 @@ const OrbitForm = ({ planet, planets, dispatch }) => {
                         value={semi}
                         onChange={(event) => {
                             setSemi(event.target.value);
-                            setPeriod(getOrbitalPeriod(planets.find(primary => primary.id === planet.primaryId).mass, event.target.value).toFixed(planet.isMoon ? 5 : 2));
+                            setPeriod(getOrbitalPeriod(planets.find(primary => primary.id === planet.orbit.primaryId).mass, event.target.value).toFixed(planet.isMoon ? 6 : 2));
                             setChanged(true);
                         }}
                     />

@@ -3,7 +3,6 @@ import { Card, CardBody, Accordion, AccordionItem, AccordionHeader, AccordionBod
 import InfoForm from './forms/InfoForm';
 import OrbitForm from './forms/OrbitForm';
 import SurfaceForm from './forms/SurfaceForm';
-
 import { usePlanetsProvider } from '../providers/PlanetsProvider';
 
 const PlanetInfo = () => {
@@ -11,7 +10,7 @@ const PlanetInfo = () => {
     const { selectedPlanet, planets, dispatch, editMode } = usePlanetsProvider();
     const [infoTab, setInfoTab] = useState('info');
 
-    if(infoTab === 'orbit' && !selectedPlanet?.orbitElements) setInfoTab('info');
+    if(infoTab === 'orbit' && !selectedPlanet?.orbit) setInfoTab('info');
 
     return (
         <div style={{ marginTop: '0.5em' }}>

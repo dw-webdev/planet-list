@@ -5,6 +5,7 @@ import { getOrbitCoords } from '../../utils/orbitUtils';
 import { EXAGERATE_MOON_ORBIT } from '../../store/planetsReducer';
 
 const HOVER_COLOR = '#ffffff';
+const SECONDS_PER_ORBIT = 60;
 
 const getScale = (iconSize) => {
 
@@ -36,13 +37,13 @@ const PlanetSprite = ({ planet, selectPlanet, planets, center, exMoonOrb }) => {
     
     const [hover, setHover] = useState(false);
 
-    const [orbit, setOrbit] = useState(0);
+    const [orbitElapsed, setOrbitElapsed] = useState(0);
     const [position, setPosition] = useState([0, 0, 0]);
 
     useFrame((_, delta) => {
-        if(planet.orbitElements) {
-            setOrbit(orbit + delta <= planet.period ? orbit + delta : 0);
-            setPosition(getOrbitCoords(exMoonOrb && planet.isMoon ? {...planet.orbitElements, semi: planet.orbitElements.semi * EXAGERATE_MOON_ORBIT} : planet.orbitElements, orbit / planet.period));
+        if(planet.orbit) {
+            setOrbitElapsed(orbitElapsed + delta <= (planet.orbit.period * SECONDS_PER_ORBIT) ? orbitElapsed + delta : 0);
+            setPosition(getOrbitCoords(exMoonOrb && planet.orbit.geomEx ? {...planet.orbit, semi: planet.orbit.semi * EXAGERATE_MOON_ORBIT} : planet.orbit, orbitElapsed / (planet.orbit.period * SECONDS_PER_ORBIT)));
         }
     });
 
@@ -62,15 +63,15 @@ const PlanetSprite = ({ planet, selectPlanet, planets, center, exMoonOrb }) => {
                     sizeAttenuation={false}
                 />
             </sprite>
-            {planet.orbitGeometry && (
-            <line renderOrder={1} geometry={exMoonOrb && planet.isMoon ? planet.orbitGeometryEx : planet.orbitGeometry}>
+            {planet.orbit && (
+            <line renderOrder={1} geometry={exMoonOrb && planet.orbit.geomEx ? planet.orbit.geomEx : planet.orbit.geom}>
                 <lineBasicMaterial color={hover ? HOVER_COLOR : planet.iconColor} />
             </line>
             )}
-            {planets.filter(moon => moon.primaryId === planet.id).map(moon => (
+            {planets.filter(satellite => satellite.orbit?.primaryId === planet.id).map(satellite => (
             <PlanetSprite
-                key={moon.id}
-                planet={moon}
+                key={satellite.id}
+                planet={satellite}
                 selectPlanet={selectPlanet}
                 planets={planets}
                 center={position}

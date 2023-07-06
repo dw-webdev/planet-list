@@ -6,24 +6,24 @@ import PlanetRemoveModal from './modals/PlanetRemoveModal';
 
 const PlanetList = () => {
 
-    const { planets, dispatch, selectedPlanet, selectPlanet, editMode, setEditMode } = usePlanetsProvider();
+    const { planets, selectedPlanet, selectPlanet, editMode, setEditMode } = usePlanetsProvider();
 
-    const renderNestedList = (renderPlanet, depth) => {
+    const renderNestedList = (planet, depth) => {
 
-        const childPlanets = planets.filter(childPlanet => childPlanet.primaryId === renderPlanet.id);
-        const planetName = renderPlanet.name || '<Unnamed>';
+        const satellites = planets.filter(satellite => satellite.orbit?.primaryId === planet.id);
+        const planetName = planet.name || '<Unnamed>';
 
         return (
             <>
                 <ListGroupItem
-                    key={renderPlanet.id}
+                    key={planet.id}
                     tag="button"
-                    active={renderPlanet === selectedPlanet}
+                    active={planet === selectedPlanet}
                     style={{
                         textAlign: 'left',
                         paddingLeft: (depth * 0.75 + 0.75) + 'em'
                     }}
-                    onClick={() => editMode ? openRemoveModal(renderPlanet) : selectPlanet(renderPlanet)}
+                    onClick={() => editMode ? openRemoveModal(planet) : selectPlanet(planet)}
                     >
                     {editMode ? (
                     <span className='text-danger'>&times; {planetName}</span>
@@ -33,18 +33,18 @@ const PlanetList = () => {
                 </ListGroupItem>
                 {editMode && depth < 2 && (
                 <ListGroupItem
-                    key={renderPlanet.id + '-add'}
+                    key={planet.id + '-add'}
                     tag="button"
                     style={{
                         textAlign: 'left',
                         paddingLeft: ((depth + 1) * 0.75 + 0.75) + 'em'
                     }}
-                    onClick={() => openAddModal(renderPlanet)}
+                    onClick={() => openAddModal(planet)}
                     >
                     <span className='text-success'>+ Add {depth === 0 ? 'Planet' : 'Moon'}&hellip;</span>
                 </ListGroupItem>
                 )}
-                {childPlanets.map(childPlanet => renderNestedList(childPlanet, depth + 1))}
+                {satellites.map(satellite => renderNestedList(satellite, depth + 1))}
             </>
         );
     };
@@ -64,7 +64,7 @@ const PlanetList = () => {
     const [removeModal, setRemoveModal] = useState(false);
     const [removePlanet, setRemovePlanet] = useState(null);
 
-    const rootPlanets = planets.filter(rootPlanet => rootPlanet.primaryId === null);
+    const rootPlanets = planets.filter(rootPlanet => !rootPlanet.orbit);
 
     return (
         <div style={{ marginTop: '0.5em' }}>

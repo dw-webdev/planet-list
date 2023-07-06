@@ -5,7 +5,7 @@ const PlanetRemoveModal = ({ isOpen, setIsOpen, planet }) => {
 
     const { planets, dispatch } = usePlanetsProvider();
 
-    const satellites = planet ? planets.filter(satellite => satellite.primaryId === planet.id) : [];
+    const satellites = planet ? planets.filter(satellite => satellite.orbit?.primaryId === planet.id) : [];
     
     return(
         <Modal isOpen={isOpen} toggle={() => setIsOpen(!isOpen)}>

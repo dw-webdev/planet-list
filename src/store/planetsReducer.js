@@ -1,35 +1,39 @@
 import { BufferGeometry } from 'three';
 import { getOrbitPoints } from '../utils/orbitUtils';
-import { getRandomColor } from '../utils/colorUtils';
+import { getOrbitalPeriod } from '../utils/physicsUtils';
 
 let planetCounter = 0;
 
-export const EXAGERATE_MOON_ORBIT = 200;
+export const EXAGERATE_MOON_ORBIT = 100;
 
 const nextId = () => ++planetCounter;
 
-const createOrbitGeometry = (orbitElements) => new BufferGeometry().setFromPoints(getOrbitPoints(orbitElements));
-
-const createPlanet = (data) => {
-    return {
-        id: data.id || nextId(),
-        primaryId: data.primaryId || null,
-        isMoon: data.isMoon || false,
-        mass: data.mass || 1,
-        radius: data.radius || 1,
-        period: data.orbitElements ? (data.isMoon ? 10 : 120) : null,
-        name: data.name || 'New Planet',
-        desc: data.desc || '',
-        icon: data.icon || 'simple',
-        iconSize: data.iconSize || 'small',
-        iconColor: data.iconColor || '#ffffff',
-        orbitElements: data.orbitElements || null,
-        orbitGeometry: data.orbitElements ? createOrbitGeometry(data.orbitElements) : null,
-        orbitGeometryEx: (data.orbitElements && data.isMoon) ? createOrbitGeometry({...data.orbitElements, semi: data.orbitElements.semi * EXAGERATE_MOON_ORBIT}) : null
-    };
-};
-
 export const planetsReducer = (planets, action) => {
+
+    const createPlanet = (data) => {
+        return {
+            id: data.id || nextId(),
+            isMoon: data.isMoon || false,
+            mass: data.mass || 1,
+            radius: data.radius || 1,
+            name: data.name || '',
+            desc: data.desc || '',
+            icon: data.icon || 'simple',
+            iconSize: data.iconSize || 'small',
+            iconColor: data.iconColor || '#808080',
+            orbit: data.orbit ? createOrbit(data.orbit, data.isMoon) : null
+        };
+    };
+
+    const createOrbit = (orbit, exagerate = false) => {
+
+        return {
+            ...orbit,
+            period: getOrbitalPeriod(planets.find(planet => planet.id === orbit.primaryId).mass, orbit.semi),
+            geom: new BufferGeometry().setFromPoints(getOrbitPoints(orbit)),
+            geomEx: exagerate ? new BufferGeometry().setFromPoints(getOrbitPoints({...orbit, semi: orbit.semi * EXAGERATE_MOON_ORBIT})) : null
+        };
+    };
 
     switch(action.type) {
 
@@ -49,27 +53,88 @@ export const planetsReducer = (planets, action) => {
         case 'update-orbit':
             return planets.map(planet => planet.id !== action.data.id ? planet : {
                 ...planet,
-                period: action.data.orbitElements ? (planet.isMoon ? 10 : 120) : null,
-                orbitElements: action.data.orbitElements || null,
-                orbitGeometry: action.data.orbitElements ? createOrbitGeometry(action.data.orbitElements) : null,
-                orbitGeometryEx: (action.data.orbitElements && planet.isMoon) ? createOrbitGeometry({...action.data.orbitElements, semi: action.data.orbitElements.semi * EXAGERATE_MOON_ORBIT}) : null
+                orbit: createOrbit(action.data.orbit, planet.isMoon)
             });
 
-            case 'update-surface':
-                return planets.map(planet => planet.id !== action.data.id ? planet : {
-                    ...planet,
-                    mass: action.data.mass,
-                    radius: action.data.radius
-                });
+        case 'update-surface':
+            return planets.map(planet => planet.id !== action.data.id ? planet : {
+                ...planet,
+                mass: action.data.mass,
+                radius: action.data.radius
+            });
 
         case 'delete':
-            return planets.filter(planet => planet.id !== action.data && planet.primaryId !== action.data);
+            return planets.filter(planet => planet.id !== action.data && planet.orbit?.primaryId !== action.data);
 
         default:
             return planets;
     }
 };
 
+export const getInitPlanets = () => {
+
+    const sunId = nextId();
+    const earthId = nextId();
+
+    const earthOrbit = {
+        semi: 1,
+        ecc: 0.02,
+        inc: 0,
+        meanLong: 100,
+        longPeri: 102,
+        longAsc: -11
+    };
+
+    const moonOrbit = {
+        semi: 0.0027,
+        ecc: 0.05,
+        inc: 5,
+        meanLong: 0,
+        longPeri: 0,
+        longAsc: 0
+    };
+    
+    return [{
+        id: sunId,
+        mass: 333030,
+        radius: 109,
+        name: 'Sun',
+        icon: 'sun',
+        iconSize: 'huge',
+        iconColor: '#ffc060'
+    },{
+        id: earthId,
+        mass: 1,
+        radius: 1,
+        name: 'Earth',
+        icon: 'earth',
+        iconSize: 'small',
+        iconColor: '#6699ff',
+        orbit: {
+            ...earthOrbit,
+            primaryId: sunId,
+            period: 1,
+            geom: new BufferGeometry().setFromPoints(getOrbitPoints(earthOrbit))
+        }
+    },{
+        id: nextId(),
+        isMoon: true,
+        mass: 0.0123,
+        radius: 0.2727,
+        name: 'Moon',
+        icon: 'moon',
+        iconSize: 'tiny',
+        iconColor: '#999999',
+        orbit: {
+            ...moonOrbit,
+            primaryId: earthId,
+            period: 0.0748,
+            geom: new BufferGeometry().setFromPoints(getOrbitPoints(moonOrbit)),
+            geomEx: new BufferGeometry().setFromPoints(getOrbitPoints({...moonOrbit, semi: moonOrbit.semi * EXAGERATE_MOON_ORBIT}))
+        }
+    }];
+};
+/*
 export const getInitPlanets = () => {
 
     const pick = (array) => array[Math.floor(Math.random() * array.length)];
@@ -115,12 +180,12 @@ export const getInitPlanets = () => {
 
         initPlanets.push(createPlanet({
             id: planetId,
-            primaryId: sunId,
             name: 'Planet ' + (i + 1),
             icon: pick(planetIcons[planetSize]),
             iconSize: planetSize,
             iconColor: getRandomColor(),
-            orbitElements: {
+            orbit: {
+                primaryId: sunId,
                 semi: ((Math.pow(i, 2) * 0.5 + Math.random() * 0.25 + 1) * 0.5).toFixed(2),
                 ecc: (Math.random() * 0.15).toFixed(2),
                 inc: Math.floor(Math.random() * 10) - 5,
@@ -135,13 +200,13 @@ export const getInitPlanets = () => {
             const moonSize = pick(moonSizes[planetSize]);
 
             initPlanets.push(createPlanet({
-                primaryId: planetId,
                 isMoon: true,
                 name: 'Moon ' + (j + 1),
                 icon: pick(moonIcons[moonSize]),
                 iconSize: moonSize,
                 iconColor: getRandomColor(),
-                orbitElements: {
+                orbit: {
+                    primaryId: planetId,
                     semi: ((Math.pow(j, 2) * 0.5 + Math.random() * 0.25 + 1) * 0.001).toFixed(5),
                     ecc: (Math.random() * 0.15).toFixed(2),
                     inc: Math.floor(Math.random() * 10) - 5,
@@ -156,12 +221,12 @@ export const getInitPlanets = () => {
     for(let i = 0, l = Math.floor(Math.random() * 5) - 2; i < l; i++) {
 
         initPlanets.push(createPlanet({
-            primaryId: sunId,
             name: 'Comet ' + (i + 1),
             icon: 'potato',
             iconSize: 'tiny',
             iconColor: getRandomColor(),
-            orbitElements: {
+            orbit: {
+                primaryId: sunId,
                 semi: ((Math.pow(i, 2) * 0.5 + Math.random() * 0.25 + 1) * 5).toFixed(2),
                 ecc: (Math.random() * 0.2 + 0.75).toFixed(2),
                 inc: Math.floor(Math.random() * 180) - 90,
@@ -174,3 +239,4 @@ export const getInitPlanets = () => {
 
     return initPlanets;
 };
+*/
