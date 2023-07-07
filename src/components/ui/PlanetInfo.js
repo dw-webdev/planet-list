@@ -14,16 +14,9 @@ const PlanetInfo = () => {
 
     return (
         <div style={{ marginTop: '0.5em', marginBottom: '1em' }}>
-            {!selectedPlanet && (
-            <Card className='border-primary text-primary'>
-                {!editMode && (
-                <CardBody style={{ padding: '1em 1.5em' }}>Click  an object in the list or 3D view to show/edit details.</CardBody>
-                )}
-                {editMode && (
-                <CardBody style={{ padding: '1em 1.5em' }}>Finish editing system to show/edit details of objects.</CardBody>
-                )}
+            <Card className='border-primary text-primary mb-4'>
+                <CardBody style={{ padding: '1em 1.5em'}}>{selectedPlanet ? selectedPlanet.name + (selectedPlanet.desc ? ': ' + selectedPlanet.desc : '') : editMode ? 'Finish editing system to show/edit details of objects.' : 'Click  an object in the list or 3D view to show/edit details.'}</CardBody>
             </Card>
-            )}
             {selectedPlanet && (
             <Accordion open={infoTab} toggle={(id) => setInfoTab(id)}>
                 <AccordionItem>

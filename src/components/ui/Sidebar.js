@@ -3,6 +3,9 @@ import { Collapse, Container, Row, Col, Button } from 'reactstrap';
 import ViewControls from './ViewControls';
 import PlanetInfo from './PlanetInfo';
 import PlanetList from './PlanetList';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 const Sidebar = () => {
 
@@ -41,8 +44,19 @@ const Sidebar = () => {
     return(
         <div style={{ position: 'absolute', height: '100vh', backgroundColor: 'white' }}>
             <div style={{ position: 'absolute', right: 0, height: '100vh' }}>
-                <div style={{ position: 'absolute', left: 0, width: 2, height: '100vh' }} className='bg-primary'>
-                    <Button onClick={() => setIsOpen(!isOpen)} style={styles.toggleButton}>{isOpen ? 'close' : 'open'}</Button>
+                <div className='bg-primary' style={{ position: 'absolute', left: 0, width: 2, height: '100vh' }}>
+                    <Button
+                        style={styles.toggleButtonLeft}
+                        onClick={() => setIsOpen(false)}
+                    >
+                        <FontAwesomeIcon icon={faChevronLeft} />
+                    </Button>
+                    <Button
+                        style={styles.toggleButtonRight}
+                        onClick={() => setIsOpen(true)}
+                    >
+                        <FontAwesomeIcon icon={faChevronRight} />
+                    </Button>
                 </div>
             </div>
             <Collapse horizontal isOpen={isOpen}>
@@ -64,11 +78,21 @@ const Sidebar = () => {
 }
 
 const styles = {
-    toggleButton: {
+    toggleButtonLeft: {
+        position: 'absolute',
+        right: '50%',
+        top: '50%',
+        zIndex: 1,
+        transform: 'translateY(-50%)',
+        borderRadius: '100% 0 0 100%'
+    },
+    toggleButtonRight: {
         position: 'absolute',
         left: '50%',
         top: '50%',
-        transform: 'translateX(-50%) translateY(-50%)'
+        zIndex: 1,
+        transform: 'translateY(-50%)',
+        borderRadius: '0 100% 100% 0'
     }
 }
 
