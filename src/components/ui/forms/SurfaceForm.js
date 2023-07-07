@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Form, FormGroup, Col, Input, Label, UncontrolledTooltip, Button } from 'reactstrap';
-import { getMass, getSurfaceGravity } from '../../../utils/physicsUtils';
+import { getMass, getSurfaceGravity, getOrbitalPeriod } from '../../../utils/physicsUtils';
 import { usePlanetsProvider } from '../../providers/PlanetsProvider';
 
 const SurfaceForm = ({ planet, dispatch }) => {
@@ -17,14 +17,19 @@ const SurfaceForm = ({ planet, dispatch }) => {
         event.preventDefault();
         dispatch({ type: 'update-surface', data: {
             id: planet.id,
-            density: den,
-            radius: rad,
-            mass: getMass(den, rad)
+            density: event.target['den'].value,
+            radius: event.target['rad'].value,
+            mass: event.target['mass'].value
         }});
         // need to update satellite orbits when primary mass changes
         planets.filter(satellite => satellite.orbit?.primaryId === planet.id).forEach(satellite => {
-            console.log(planets.find(primary => primary.id === satellite.orbit.primaryId));
-            console.log(satellite);
+            dispatch({ type: 'update-orbit', data: {
+                id: satellite.id,
+                orbit: {
+                    ...satellite.orbit,
+                    period: getOrbitalPeriod(event.target['mass'].value, satellite.orbit.semi)
+                }
+            }});
         });
         setChanged(false);
     }

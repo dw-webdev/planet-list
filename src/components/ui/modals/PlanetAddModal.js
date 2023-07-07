@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Form, Button } from 'reactstrap';
 import { usePlanetsProvider } from '../../providers/PlanetsProvider';
+import { getOrbitalPeriod } from '../../../utils/physicsUtils';
 import InfoFormFields from '../forms/InfoFormFields';
 
 const PlanetAddModal = ({ isOpen, setIsOpen, planet }) => {
@@ -29,6 +30,7 @@ const PlanetAddModal = ({ isOpen, setIsOpen, planet }) => {
         const isMoon = !!planet.orbit;
         const satellites = planets.filter(satellite => satellite.orbit?.primaryId === planet.id);
         const greatestSemi = satellites.length > 0 ? satellites.sort((a, b) => b.orbit.semi - a.orbit.semi)[0].orbit.semi : 0;
+        const semi = (isMoon ? 0.001 : 1) * (Math.random() * 2.5 + 0.5) + greatestSemi;
         dispatch({ type: 'create', data: {
             name: event.target['name'].value,
             desc: event.target['desc'].value,
@@ -37,7 +39,8 @@ const PlanetAddModal = ({ isOpen, setIsOpen, planet }) => {
             iconColor: event.target['color'].value,
             orbit: {
                 primaryId: planet.id,
-                semi: (isMoon ? 0.001 : 1) * (Math.random() * 2.5 + 0.5) + greatestSemi,
+                period: getOrbitalPeriod(planet.mass, semi),
+                semi: semi,
                 ecc: (Math.random() * 0.1).toFixed(2),
                 inc: Math.floor(Math.random() * 10) - 5,
                 meanLong: Math.round(Math.random() * 360) - 180,

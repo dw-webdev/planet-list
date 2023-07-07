@@ -20,6 +20,7 @@ const OrbitForm = ({ planet, planets, dispatch }) => {
             id: planet.id,
             orbit: {
                 primaryId: planet.orbit.primaryId,
+                period: event.target['period'].value,
                 semi: event.target['semi'].value,
                 ecc: event.target['ecc'].value,
                 inc: event.target['inc'].value,

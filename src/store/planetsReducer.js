@@ -1,6 +1,5 @@
 import { BufferGeometry } from 'three';
 import { getOrbitPoints } from '../utils/orbitUtils';
-import { getOrbitalPeriod } from '../utils/physicsUtils';
 
 let planetCounter = 0;
 
@@ -30,7 +29,6 @@ export const planetsReducer = (planets, action) => {
         const primaryIsCentral = !planets.find(planet => planet.id === primary.id).orbit;
         return {
             ...orbit,
-            period: getOrbitalPeriod(primary.mass, orbit.semi),
             geom: new BufferGeometry().setFromPoints(getOrbitPoints(orbit)),
             geomEx: !primaryIsCentral ? new BufferGeometry().setFromPoints(getOrbitPoints({...orbit, semi: orbit.semi * EXAGERATE_MOON_ORBIT})) : null
         };
