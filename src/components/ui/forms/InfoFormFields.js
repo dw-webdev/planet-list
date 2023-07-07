@@ -1,9 +1,13 @@
-import {Container, Row, Col, FormGroup, Input, Label} from 'reactstrap';
+import { Container, Row, Col, FormGroup, Input, Label, Button } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDice } from '@fortawesome/free-solid-svg-icons';
+import PLANET_NAMES from '../../../data/PLANET_NAMES.json';
 
 const iconOpts = ['simple', 'ringed', 'earth', 'moon', 'sun', 'cracked', 'striped', 'potato', 'black-hole'];
 const sizeOpts = ['tiny', 'small', 'medium', 'large', 'huge'];
 
 const capitalize = (text) => text.substr(0, 1).toUpperCase() + text.substr(1);
+const pick = (array) => array[Math.floor(array.length * Math.random())];
 
 const InfoFormFields = ({ singleCol, name, setName, desc, setDesc, icon, setIcon, size, setSize, color, setColor, setChanged }) => {
 
@@ -11,19 +15,36 @@ const InfoFormFields = ({ singleCol, name, setName, desc, setDesc, icon, setIcon
         <Container style={{ padding: 0 }}>
             <Row>
                 <Col md={singleCol ? 12 : 6}>
-                    <FormGroup>
-                        <Input
-                            type='text'
-                            name='name'
-                            id='name'
-                            placeholder='Name'
-                            autoComplete='off'
-                            value={name}
-                            onChange={(event) => {
-                                setName(event.target.value);
-                                if(setChanged) setChanged(true);
-                            }}
-                        />
+                    <FormGroup row>
+                        <Row>
+                            <Col xs={10} style={{ paddingRight: 0 }}>
+                                <Input
+                                    type='text'
+                                    name='name'
+                                    id='name'
+                                    placeholder='Name'
+                                    autoComplete='off'
+                                    style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+                                    value={name}
+                                    onChange={(event) => {
+                                        setName(event.target.value);
+                                        if(setChanged) setChanged(true);
+                                    }}
+                                />
+                            </Col>
+                            <Col xs={2} style={{ paddingLeft: 0 }}>
+                                <Button
+                                    style={{borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                                    onClick={(event) => {
+                                        event.preventDefault();
+                                        setName(pick(PLANET_NAMES));
+                                        if(setChanged) setChanged(true);
+                                    }}
+                                >
+                                    <FontAwesomeIcon icon={faDice} />
+                                </Button>
+                            </Col>
+                        </Row>
                     </FormGroup>
                     <FormGroup>
                         <Input

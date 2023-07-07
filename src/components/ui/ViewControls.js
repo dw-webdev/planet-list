@@ -11,7 +11,7 @@ const PlanetControls = () => {
                 <Form>
                     <FormGroup switch inline>
                         <Input role='switch' type='switch' checked={exMoonOrb} onChange={(event) => setExMoonOrb(event.target.checked)} />
-                        <Label check>Exagerate Moon Orbits</Label>
+                        <Label check>Exaggerate Moon Orbits</Label>
                     </FormGroup>
                     <FormGroup switch inline>
                         <Input role='switch' type='switch' checked={showEclip} onChange={(event) => setShowEclip(event.target.checked)} />
