@@ -54,8 +54,9 @@ const PlanetAddModal = ({ isOpen, setIsOpen, planet }) => {
         const greatestSemi = satellites.length > 0 ? satellites.sort((a, b) => b.orbit.semi - a.orbit.semi)[0].orbit.semi : 0;
         const semi = (isMoon ? 0.0015 : 1) * (Math.random() * 1.5 + 0.5) + greatestSemi;
         const baseRadius = (event.target['size'].value === 'tiny' ? 0.5 : event.target['size'].value === 'small' ? 1 : event.target['size'].value === 'medium' ? 2 : 4);
+        const baseDensity = (event.target['size'].value === 'tiny' ? 5000 : event.target['size'].value === 'small' ? 4000 : event.target['size'].value === 'medium' ? 3000 : 2000);
         const radius = baseRadius * (Math.random() * 2 + 1);
-        const density = (4000 / (baseRadius / 2)) * (Math.random() * 0.2 + 0.9);
+        const density = baseDensity * (Math.random() * 0.4 + 0.8);
         dispatch({ type: 'create', data: {
             name: event.target['name'].value,
             desc: event.target['desc'].value,
