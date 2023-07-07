@@ -11,7 +11,7 @@ const PlanetDesc = () => {
             left: '1em',
             color: '#80a0c0',
             pointerEvents: 'none'
-        }}>{selectedPlanet ? selectedPlanet.name + (selectedPlanet.desc ? ': ' + selectedPlanet.desc : ''): 'Select a planet...'}</div>
+        }}>Click and drag to rotate 3D view. Click planets to select.<br />{selectedPlanet ? selectedPlanet.name + (selectedPlanet.desc ? ': ' + selectedPlanet.desc : ''): ''}</div>
     );
 };
 
