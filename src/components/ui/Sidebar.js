@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Collapse, Container, Row, Col } from 'reactstrap';
+import { useState, useEffect } from 'react';
+import { Collapse, Container, Row, Col, Button } from 'reactstrap';
 import ViewControls from './ViewControls';
 import PlanetInfo from './PlanetInfo';
 import PlanetList from './PlanetList';
@@ -7,30 +7,57 @@ import PlanetList from './PlanetList';
 const Sidebar = () => {
 
     const [isOpen, setIsOpen] = useState(true);
+    const [sidebarCss, setSidebarCss] = useState();
+    const [columnCss, setColumnCss] = useState();
+
+    useEffect(() => {
+        const onResize = () => {
+            const gte400 = window.matchMedia('(min-width: 400px)').matches;
+            const gte500 = window.matchMedia('(min-width: 500px)').matches;
+            const gte600 = window.matchMedia('(min-width: 600px)').matches;
+            const width = gte600 ? 550 : gte500 ? 450 : gte400 ? 350 : 250;
+            setSidebarCss({
+                width: width,
+                height: '100vh',
+                overflowY: 'scroll'
+            });
+            setColumnCss(gte500 ? {
+                float: 'left',
+                width: '50%',
+                padding: '0 1em',
+                boxSizing: 'border-box'
+            } : {
+                float: 'none',
+                width: '100%',
+                padding: '0 1em',
+                boxSizing: 'border-box'
+            });
+        };
+        onResize();
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize); // cleanup
+    }, []);
 
     return(
         <div style={{ position: 'absolute', height: '100vh', backgroundColor: 'white' }}>
             <div style={{ position: 'absolute', right: 0, height: '100vh' }}>
-                <div style={{ position: 'absolute', left: 0, width: 18, height: '100vh', backgroundColor: '#c0c0c0' }}>
-                    <button onClick={() => setIsOpen(!isOpen)} style={styles.toggleButton}>{isOpen ? 'close' : 'open'}</button>
+                <div style={{ position: 'absolute', left: 0, width: 2, height: '100vh' }} className='bg-primary'>
+                    <Button onClick={() => setIsOpen(!isOpen)} style={styles.toggleButton}>{isOpen ? 'close' : 'open'}</Button>
                 </div>
             </div>
             <Collapse horizontal isOpen={isOpen}>
-                <Container style={{ width: 500, height: '100vh', overflowY: 'scroll' }}>
-                    <Row>
-                        <Col>
-                            <ViewControls />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md='6'>
-                            <PlanetList />
-                        </Col>
-                        <Col md='6'>
-                            <PlanetInfo />
-                        </Col>
-                    </Row>
-                </Container>
+                <div style={sidebarCss}>
+                    <div style={{ padding: '0 1em' }}>
+                        <ViewControls />
+                    </div>
+                    <div style={columnCss}>
+                        <PlanetList />
+                    </div>
+                    <div style={columnCss}>
+                        <PlanetInfo />
+                    </div>
+                    <div style={{ clear: 'both' }} />
+                </div>
             </Collapse>
         </div>
     );
@@ -39,12 +66,9 @@ const Sidebar = () => {
 const styles = {
     toggleButton: {
         position: 'absolute',
-        padding: '1em',
-        paddingLeft: '0.5em',
-        border: 'none',
-        borderRadius: '0 100% 100% 0',
+        left: '50%',
         top: '50%',
-        transform: 'translateY(-50%)'
+        transform: 'translateX(-50%) translateY(-50%)'
     }
 }
 

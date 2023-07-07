@@ -67,7 +67,7 @@ const PlanetList = () => {
     const rootPlanets = planets.filter(rootPlanet => !rootPlanet.orbit);
 
     return (
-        <div style={{ marginTop: '0.5em' }}>
+        <div style={{ marginTop: '0.5em', marginBottom: '1em' }}>
             <Button
                 block
                 color={!editMode ? 'primary' : 'secondary'}
@@ -79,7 +79,7 @@ const PlanetList = () => {
             >
                 {!editMode ? 'Edit System' : 'Finish Editing'}
             </Button>
-            <ListGroup style={{ marginBottom: '1em' }}>
+            <ListGroup>
                 {rootPlanets.map(rootPlanet => renderNestedList(rootPlanet, 0))}   
             </ListGroup>
             <PlanetAddModal

@@ -13,7 +13,7 @@ const PlanetInfo = () => {
     if(infoTab === 'orbit' && !selectedPlanet?.orbit) setInfoTab('info');
 
     return (
-        <div style={{ marginTop: '0.5em' }}>
+        <div style={{ marginTop: '0.5em', marginBottom: '1em' }}>
             {!selectedPlanet && (
             <Card className='border-primary text-primary'>
                 {!editMode && (
