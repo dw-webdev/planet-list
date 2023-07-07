@@ -1,8 +1,29 @@
 import { useState, useEffect } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Form, Button } from 'reactstrap';
 import { usePlanetsProvider } from '../../providers/PlanetsProvider';
-import { getOrbitalPeriod } from '../../../utils/physicsUtils';
+import { getOrbitalPeriod, getMass } from '../../../utils/physicsUtils';
+import { getRandomColor } from '../../../utils/colorUtils';
 import InfoFormFields from '../forms/InfoFormFields';
+import PLANET_NAMES from '../../../data/PLANET_NAMES.json';
+
+const planetSizes = ['small', 'medium', 'large'];
+const planetIcons = {
+    small: ['earth', 'moon', 'cracked', 'striped'],
+    medium: ['earth', 'ringed', 'moon', 'cracked', 'striped'],
+    large: ['ringed', 'moon', 'cracked', 'striped']
+};
+const moonSizes = {
+    small: ['tiny'],
+    medium: ['tiny', 'small'],
+    large: ['tiny', 'small', 'medium']
+};
+const moonIcons = {
+    tiny: ['potato', 'moon', 'cracked'],
+    small: ['potato', 'moon', 'cracked', 'striped'],
+    medium: ['moon', 'cracked', 'striped']
+};
+
+const pick = (array) => array[Math.floor(array.length * Math.random())];
 
 const PlanetAddModal = ({ isOpen, setIsOpen, planet }) => {
 
@@ -17,11 +38,12 @@ const PlanetAddModal = ({ isOpen, setIsOpen, planet }) => {
     useEffect(() => {
         if(isOpen) {
             const isMoon = !!planet.orbit;
-            setName(isMoon ? 'New Moon' : 'New Planet');
+            const size = pick(isMoon ? moonSizes[planet.iconSize] : planetSizes);
+            setName(pick(PLANET_NAMES));
             setDesc('');
-            setIcon('simple');
-            setSize(isMoon ? 'tiny' : 'small');
-            setColor('#808080');
+            setIcon(pick(isMoon ? moonIcons[size] : planetIcons[size]));
+            setSize(size);
+            setColor(getRandomColor());
         }
     }, [isOpen]);
 
@@ -30,13 +52,19 @@ const PlanetAddModal = ({ isOpen, setIsOpen, planet }) => {
         const isMoon = !!planet.orbit;
         const satellites = planets.filter(satellite => satellite.orbit?.primaryId === planet.id);
         const greatestSemi = satellites.length > 0 ? satellites.sort((a, b) => b.orbit.semi - a.orbit.semi)[0].orbit.semi : 0;
-        const semi = (isMoon ? 0.001 : 1) * (Math.random() * 2.5 + 0.5) + greatestSemi;
+        const semi = (isMoon ? 0.0015 : 1) * (Math.random() * 1.5 + 0.5) + greatestSemi;
+        const baseRadius = (event.target['size'].value === 'tiny' ? 0.5 : event.target['size'].value === 'small' ? 1 : event.target['size'].value === 'medium' ? 2 : 4);
+        const radius = baseRadius * (Math.random() * 2 + 1);
+        const density = (4000 / (baseRadius / 2)) * (Math.random() * 0.2 + 0.9);
         dispatch({ type: 'create', data: {
             name: event.target['name'].value,
             desc: event.target['desc'].value,
             icon: event.target['icon'].value,
             iconSize: event.target['size'].value,
             iconColor: event.target['color'].value,
+            density: density,
+            radius: radius,
+            mass: getMass(density, radius),
             orbit: {
                 primaryId: planet.id,
                 period: getOrbitalPeriod(planet.mass, semi),
