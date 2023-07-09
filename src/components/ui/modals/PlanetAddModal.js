@@ -57,20 +57,21 @@ const PlanetAddModal = ({ isOpen, setIsOpen, planet }) => {
         const baseDensity = (event.target['size'].value === 'tiny' ? 5000 : event.target['size'].value === 'small' ? 4000 : event.target['size'].value === 'medium' ? 3000 : 2000);
         const radius = baseRadius * (Math.random() * 2 + 1);
         const density = baseDensity * (Math.random() * 0.4 + 0.8);
+        const mass = getMass(density, radius);
         dispatch({ type: 'create', data: {
             name: event.target['name'].value,
             desc: event.target['desc'].value,
             icon: event.target['icon'].value,
             iconSize: event.target['size'].value,
             iconColor: event.target['color'].value,
-            density: density,
-            radius: radius,
-            mass: getMass(density, radius),
+            density: Math.round(density),
+            radius: Number(radius.toFixed(radius < 0.1 ? 4 : 2)),
+            mass: Number(mass.toFixed(mass < 0.1 ? 4 : 2)),
             orbit: {
                 primaryId: planet.id,
                 period: getOrbitalPeriod(planet.mass, semi),
-                semi: semi,
-                ecc: (Math.random() * 0.1).toFixed(2),
+                semi: Number(semi.toFixed(semi < 0.1 ? 4 : 2)),
+                ecc: Number((Math.random() * 0.1).toFixed(2)),
                 inc: Math.floor(Math.random() * 10) - 5,
                 meanLong: Math.round(Math.random() * 360) - 180,
                 longPeri: Math.round(Math.random() * 360) - 180,

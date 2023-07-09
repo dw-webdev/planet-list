@@ -5,7 +5,7 @@ const ViewControlsContex = createContext(null);
 const ViewControlsProvider = ({ children }) => {
 
     const [exMoonOrb, setExMoonOrb] = useState(true);
-    const [showEclip, setShowEclip] = useState(false);
+    const [showEclip, setShowEclip] = useState(true);
 
     return (
         <ViewControlsContex.Provider value={{

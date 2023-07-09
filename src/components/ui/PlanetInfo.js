@@ -10,15 +10,13 @@ const PlanetInfo = () => {
     const { selectedPlanet, planets, dispatch, editMode } = usePlanetsProvider();
     const [infoTab, setInfoTab] = useState('info');
 
-    if(infoTab === 'orbit' && !selectedPlanet?.orbit) setInfoTab('info');
-
     return (
         <div style={{ marginTop: '0.5em', marginBottom: '1em' }}>
             <Card className='border-primary text-primary mb-4'>
                 <CardBody style={{ padding: '1em 1.5em'}}>{selectedPlanet ? selectedPlanet.name + (selectedPlanet.desc ? ': ' + selectedPlanet.desc : '') : editMode ? 'Finish editing system to show/edit details of objects.' : 'Click  an object in the list or 3D view to show/edit details.'}</CardBody>
             </Card>
             {selectedPlanet && (
-            <Accordion open={infoTab} toggle={(id) => setInfoTab(id)}>
+            <Accordion open={infoTab} toggle={(id) => setInfoTab(id !== infoTab ? id : '')}>
                 <AccordionItem>
                     <AccordionHeader targetId="info">Display</AccordionHeader>
                     <AccordionBody accordionId="info">

@@ -18,8 +18,8 @@ const SurfaceForm = ({ planet, dispatch }) => {
         dispatch({ type: 'update-surface', data: {
             id: planet.id,
             density: event.target['den'].value,
-            radius: event.target['rad'].value,
-            mass: event.target['mass'].value
+            radius: Number(event.target['rad'].value),
+            mass: Number(event.target['mass'].value)
         }});
         // need to update satellite orbits when primary mass changes
         planets.filter(satellite => satellite.orbit?.primaryId === planet.id).forEach(satellite => {
